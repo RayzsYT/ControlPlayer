@@ -3,7 +3,7 @@ package de.rayzs.controlplayer.plugin.events;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerQuitEvent;
 import de.rayzs.controlplayer.api.control.*;
-import de.rayzs.controlplayer.api.message.*;
+import de.rayzs.controlplayer.api.files.message.*;
 import org.bukkit.event.*;
 
 public class PlayerQuit extends MessageManager implements Listener {

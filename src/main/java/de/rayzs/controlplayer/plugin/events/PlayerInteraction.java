@@ -1,7 +1,7 @@
 package de.rayzs.controlplayer.plugin.events;
 
 import org.bukkit.Bukkit;
-import de.rayzs.controlplayer.api.animation.ArmSwingAnimation;
+import de.rayzs.controlplayer.api.packetbased.animation.ArmSwingAnimation;
 import de.rayzs.controlplayer.api.control.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;

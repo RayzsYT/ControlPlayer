@@ -2,7 +2,7 @@ package de.rayzs.controlplayer.configurator;
 
 import java.io.File;
 
-import de.rayzs.controlplayer.api.message.MessageType;
+import de.rayzs.controlplayer.api.files.message.MessageType;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -28,6 +28,10 @@ public class FileConfigurator {
         this.file = new File(filePath + "/" + fileName + ".yml");
         this.loadDefault = !this.file.exists();
         this.configuration = YamlConfiguration.loadConfiguration(this.file);
+    }
+
+    public File getFile() {
+        return file;
     }
 
     public void set(String path, MessageType messageType, Object obj) {

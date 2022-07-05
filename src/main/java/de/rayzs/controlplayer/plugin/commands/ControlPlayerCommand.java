@@ -1,7 +1,7 @@
 package de.rayzs.controlplayer.plugin.commands;
 
 import de.rayzs.controlplayer.api.control.*;
-import de.rayzs.controlplayer.api.message.*;
+import de.rayzs.controlplayer.api.files.message.*;
 import org.bukkit.command.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
