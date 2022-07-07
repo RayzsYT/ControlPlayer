@@ -1,5 +1,6 @@
 package de.rayzs.controlplayer.api.web;
 
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.io.IOException;
 import java.util.Scanner;
@@ -18,10 +19,12 @@ public class WebConnection {
             connection.setRequestProperty("Accept", "text/html");
             Scanner scanner = new Scanner(connection.getInputStream());
             StringBuilder builder = new StringBuilder();
-            while(scanner.hasNextLine()) builder.append(scanner.next());
+            while (scanner.hasNextLine()) builder.append(scanner.next());
             result = builder.toString();
+        } catch (ConnectException connectException) {
+            result = "nohost";
         } catch (IOException exception) {
-            result = "error";
+            result = "exception";
             exception.printStackTrace();
         }
         return this;
