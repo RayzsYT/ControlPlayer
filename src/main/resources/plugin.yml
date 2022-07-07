@@ -1,10 +1,14 @@
 name: ControlPlayer
-version: 2.0.1
+version: 2.1.2
 main: de.rayzs.controlplayer.plugin.ControlPlayerPlugin
 author: Rayzs_YT
 api-version: 1.13
 
 commands:
   controlplayer:
-    aliases: [cp, cplayer, controlp]
+    aliases: [cp, cplayer, controlp, control]
     description: Control the movement of a player
+
+  controlplayerreload:
+    aliases: [cpr, controlplayerr, cpreload]
+    description: Reload all files
