@@ -5,10 +5,10 @@ import de.rayzs.controlplayer.plugin.commands.*;
 import de.rayzs.controlplayer.plugin.events.*;
 import de.rayzs.controlplayer.api.web.WebConnection;
 import de.rayzs.controlplayer.plugin.bstats.Metrics;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
-import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class ControlPlayerPlugin extends JavaPlugin {
 
@@ -17,7 +17,7 @@ public class ControlPlayerPlugin extends JavaPlugin {
     private boolean latestVersion = true;
     private final WebConnection web = new WebConnection();
     private final Class<?>[] listeners = {AsyncPlayerChat.class, PlayerInteraction.class, PlayerChangeWorld.class, PlayerJoin.class, PlayerQuit.class, PlayerDeath.class};
-    private final String[] commandNames = {"cp", "controlplayer", "cplayer", "controlp"};
+    private final String[] mainCommandNames = {"cp", "controlplayer", "cplayer", "controlp"}, reloadCommandNames = {"controlplayerreload", "controlplayerr", "cpr", "cpreload"};
     private int updaterTaskId;
 
     @Override
@@ -48,12 +48,19 @@ public class ControlPlayerPlugin extends JavaPlugin {
     }
 
     protected void registerCommands() {
-        ControlPlayerCommand commandClass = new ControlPlayerCommand();
+        ControlPlayerCommand mainCommandClass = new ControlPlayerCommand();
+        ControlPlayerReloadCommand reloadCommandClass = new ControlPlayerReloadCommand();
         ControlPlayerTabCompleter tabCompleterClass = new ControlPlayerTabCompleter();
-        for (String commandName : commandNames) {
+
+        for (String commandName : mainCommandNames) {
             PluginCommand command = getCommand(commandName);
-            command.setExecutor(commandClass);
+            command.setExecutor(mainCommandClass);
             command.setTabCompleter(tabCompleterClass);
+        }
+
+        for (String commandName : reloadCommandNames) {
+            PluginCommand command = getCommand(commandName);
+            command.setExecutor(reloadCommandClass);
         }
     }
 
@@ -64,10 +71,15 @@ public class ControlPlayerPlugin extends JavaPlugin {
         Object delayObject = SettingsManager.getSetting(SettingType.UPDATER_DELAY);
         int delay = delayObject == null ? 18000 : (int) delayObject;
         updaterTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            if(!web.connect("https://www.rayzs.de/products/controlplayer/version/index.php").getResult().equals(getDescription().getVersion())) {
+            String result = web.connect("https://www.rayzs.de/products/controlplayer/version/index.php").getResult();
+            if(!result.equals(getDescription().getVersion())) {
                 Bukkit.getScheduler().cancelTask(updaterTaskId);
-                getLogger().warning("You're using an outdated version of this plugin!");
-                getLogger().warning("Please update it on: https://www.rayzs.de/products/controlplayer/page");
+                if(result.equals("nohost")) getLogger().warning("Failed reaching web-host! (firewall?)");
+                else if(result.equals("exception")) getLogger().warning("Failed creating web-instance! (outdated java version?)");
+                else {
+                    getLogger().warning("You're using an outdated version of this plugin!");
+                    getLogger().warning("Please update it on: https://www.rayzs.de/products/controlplayer/page");
+                }
                 latestVersion = false;
             }
         }, 20, delay);
