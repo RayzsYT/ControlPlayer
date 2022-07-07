@@ -5,11 +5,17 @@ import java.util.HashMap;
 
 public class MessageManager {
 
-    private final static FileConfigurator FILE = new FileConfigurator("messages", "./plugins/ControlPlayer");
+    private static FileConfigurator FILE = new FileConfigurator("messages", "./plugins/ControlPlayer");
     private final static HashMap<MessageType, String> MESSAGES = new HashMap<>();
     private final static String MESSAGE_PATH = "messages.";
 
-    static {
+    static { reload(true); }
+
+    public static void reload(boolean firstLoad) {
+        if(!firstLoad) {
+            FILE = new FileConfigurator("messages", "./plugins/ControlPlayer");
+            MESSAGES.clear();
+        }
         MessageType[] messageTypes = MessageType.values();
 
         for (MessageType messageType : messageTypes) {
@@ -43,7 +49,7 @@ public class MessageManager {
                 FILE.set(defaultPath, defaultMessage + "You were being controlled right now!");
                 break;
             case USAGE:
-                FILE.set(defaultPath, defaultMessage + "&7Use &e/cp [player]&7 to control someone. Execute this command again to stop controlling the player.");
+                FILE.set(defaultPath, defaultMessage + "&7Use &e/cp [player] &7to control someone. Execute this command again to stop controlling the player.");
                 break;
             case SUCCESS:
                 FILE.set(defaultPath, defaultMessage + "&aYou are controlling %player%!");
@@ -76,7 +82,7 @@ public class MessageManager {
                 FILE.set(defaultPath, defaultMessage + "&aYou stopped controlling the player!");
                 break;
             case PLAYER_DIED:
-                FILE.set(defaultPath, defaultMessage + "&cThe player you controlled left the game");
+                FILE.set(defaultPath, defaultMessage + "&cThe player you controlled died!");
         }
         FILE.save();
     }
