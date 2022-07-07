@@ -5,11 +5,17 @@ import java.util.HashMap;
 
 public class SettingsManager {
 
-    private final static FileConfigurator FILE = new FileConfigurator("config", "./plugins/ControlPlayer");
+    private static FileConfigurator FILE = new FileConfigurator("config", "./plugins/ControlPlayer");
     private final static HashMap<SettingType, Object> SETTINGS = new HashMap<>();
     private final static String SETTING_PATH = "settings.";
 
-    static {
+    static { reload(true); }
+
+    public static void reload(boolean firstLoad) {
+        if(!firstLoad) {
+            FILE = new FileConfigurator("config", "./plugins/ControlPlayer");
+            SETTINGS.clear();
+        }
         SettingType[] settingTypes = SettingType.values();
 
         for (SettingType settingType : settingTypes) {
@@ -34,7 +40,7 @@ public class SettingsManager {
         switch (settingType) {
             case APIMODE: FILE.set(defaultPath, false); break;
             case UPDATER_DELAY: FILE.set(defaultPath, 18000); break;
-            case CONTROL_RUNNING_SYNCDELAY: FILE.set(defaultPath, 1); break;
+            case CONTROL_RUNNING_SYNCDELAY: FILE.set(defaultPath, 0); break;
             case CONTROL_RUNNING_FORCECHAT_BYPASSMESSAGE:FILE.set(defaultPath, "-b "); break;
             default: FILE.set(defaultPath, true); break;
         }
