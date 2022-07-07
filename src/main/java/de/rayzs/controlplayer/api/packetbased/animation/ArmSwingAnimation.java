@@ -12,7 +12,7 @@ public class ArmSwingAnimation {
 
     public ArmSwingAnimation(Server server) {
         serverVersion = new ServerVersion(server);
-        if(serverVersion.isModern()) armSwing = new ModernArmSwingAnimation();
+        if(serverVersion.isModern()) armSwing = new ModernArmSwingAnimation(serverVersion.getRawVersionName());
         else armSwing = new LegacyArmSwingAnimation(serverVersion.getRawVersionName());
     }
 
