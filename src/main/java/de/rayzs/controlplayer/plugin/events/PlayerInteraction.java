@@ -141,7 +141,7 @@ public class PlayerInteraction implements Listener {
                     player = (Player) event.getEntity();
                     if((player.getHealth() - event.getDamage()) < 0.5) {
                         event.setCancelled(true);
-                        player.damage(20.0D, victim);
+                        player.damage(event.getDamage(), victim);
                     }
                 }
             }
