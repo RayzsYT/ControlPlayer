@@ -9,6 +9,8 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 
+import java.lang.reflect.Field;
+
 public class PlayerInteraction implements Listener {
 
     private final ArmSwingAnimation armSwingAnimation;
@@ -125,15 +127,23 @@ public class PlayerInteraction implements Listener {
             instanceState = ControlManager.getInstanceState(player);
             instance = ControlManager.getControlInstance(player);
 
-            switch (instanceState) {
-                case 0:
-                    if (instance.victim() == player) return;
-                    Player victim = instance.victim();
-                    armSwingAnimation.execute(victim);
-                    break;
-                case 1:
-                    event.setCancelled(true);
-                    break;
+            if (instanceState == 0) {
+                if (instance.victim() == player) return;
+                Player victim = instance.victim();
+                armSwingAnimation.execute(victim);
+                try {
+                    Class<?> clazz = event.getClass();
+                    Field field = clazz.getDeclaredField("damager");
+                    field.setAccessible(true);
+                    field.set(event, victim);
+                } catch (Exception exception) { exception.printStackTrace(); }
+                if (event.getEntity() instanceof Player) {
+                    player = (Player) event.getEntity();
+                    if((player.getHealth() - event.getDamage()) < 0.5) {
+                        event.setCancelled(true);
+                        player.damage(20.0D, victim);
+                    }
+                }
             }
         } else if(event.getEntity() instanceof Player) {
             player = (Player) event.getEntity();
