@@ -10,7 +10,6 @@ import de.rayzs.controlplayer.plugin.ControlPlayerPlugin;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ControlManager {
@@ -22,11 +21,12 @@ public class ControlManager {
     private static final HashMap<Player, Float> LAST_EXP = new HashMap<>(), LAST_EXHAUSTION = new HashMap<>();
     private static final HashMap<Player, Location> LAST_LOCATION = new HashMap<>();
     private static final HashMap<Player, GameMode> LAST_GAMEMODE = new HashMap<>();
+    private static final HashMap<Player, List<Player>> PLAYER_WHO_CAN_SEE = new HashMap<>();
 
     private static final List<ControlInstance> INSTANCES = new ArrayList<>();
-    private static boolean apiMode, sendActionbar, returnInventory, returnLocation, returnHealth, returnFoodLevel, returnGamemode, returnFlight,returnLevel;
+    private static final boolean apiMode, sendActionbar, returnInventory, returnLocation, returnHealth, returnFoodLevel, returnGamemode, returnFlight,returnLevel;
 
-    private static final Actionbar actionbar = new Actionbar(Bukkit.getServer());
+    private static final Actionbar actionbar = new Actionbar();
     private static final String actionbarText = MessageManager.getMessage(MessageType.ACTIONBAR_TEXT);
 
     static {
@@ -41,12 +41,19 @@ public class ControlManager {
         returnLevel = (boolean) SettingsManager.getSetting(SettingType.CONTROL_STOP_RETURN_LEVEL);
 
         int delay = (int) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_SYNCDELAY);
+
         Bukkit.getScheduler().scheduleSyncRepeatingTask(ControlPlayerPlugin.getInstance(), () -> {
             if(!INSTANCES.isEmpty()) INSTANCES.forEach(instance -> {
                 ControlPlayerEventManager.call(ControlPlayerEventType.RUNNING, instance.controller(), instance.victim());
                 if(!apiMode) instance.onTick();
             });
         }, 0, delay);
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(ControlPlayerPlugin.getInstance(), () -> {
+            if(!INSTANCES.isEmpty()) INSTANCES.forEach(instance -> {
+                if(!apiMode) instance.victim().teleport(instance.controller());
+            });
+        }, 0L, 0L);
     }
 
     public static ControlState createControlInstance(Player controller, Player victim) {
@@ -74,16 +81,28 @@ public class ControlManager {
         ControlPlayerEventManager.call(ControlPlayerEventType.START, controller, victim);
 
         if(!apiMode) {
+            List<Player> players_who_can_see = new ArrayList<>();
+            Bukkit.getOnlinePlayers().forEach(players -> {
+                if(players.canSee(controller)) players_who_can_see.add(players);
+            });
+            PLAYER_WHO_CAN_SEE.put(controller, players_who_can_see);
+            Bukkit.getOnlinePlayers().forEach(ControlManager::hideAllControllers);
             saveOrReturnController(controller, false);
             syncPlayers(controller, victim, true);
             victim.spigot().setCollidesWithEntities(false);
-            Bukkit.getOnlinePlayers().forEach(ControlManager::hideAllControllers);
         }
+
         return ControlState.SUCCESS;
     }
 
     public static void hideAllControllers(Player player) {
-        Bukkit.getOnlinePlayers().stream().filter(players -> getInstanceState(players) == 0).forEach(player::hidePlayer);
+        Bukkit.getOnlinePlayers().stream().filter(controllers -> getInstanceState(controllers) == 0).forEach(controllers -> {
+            if(player.canSee(controllers)) {
+                List<Player> player_who_can_see = PLAYER_WHO_CAN_SEE.get(controllers);
+                player_who_can_see.add(player);
+            }
+            player.hidePlayer(controllers);
+        });
     }
 
     public static boolean deleteControlInstance(Player player) {
@@ -98,10 +117,7 @@ public class ControlManager {
             INSTANCES.remove(controlInstance);
             if(controller != null) {
                 ControlPlayerEventManager.call(ControlPlayerEventType.STOP, controller, victim);
-                if(!apiMode) {
-                    saveOrReturnController(controller, true);
-                    Bukkit.getOnlinePlayers().stream().filter(players -> !players.canSee(player)).forEach(players -> players.showPlayer(player));
-                }
+                if(!apiMode) saveOrReturnController(controller, true);
             }
             return true;
         }
@@ -129,6 +145,7 @@ public class ControlManager {
         if(sendActionbar) actionbar.execute(controller, actionbarText.replace("%player%", victim.getName()));
         if(start) {
             controller.hidePlayer(victim);
+            controller.teleport(victim.getLocation());
             syncPlayerSources(controller, victim);
             return;
         }
@@ -136,13 +153,13 @@ public class ControlManager {
     }
 
     protected static void syncPlayerSources(Player player, Player sourcePlayer) {
-        player.teleport(sourcePlayer);
         player.getInventory().setContents(sourcePlayer.getInventory().getContents());
         player.getInventory().setArmorContents(sourcePlayer.getInventory().getArmorContents());
-        player.setHealth(sourcePlayer.getHealth());
+        if(!(sourcePlayer.getHealth() < 0.5 || sourcePlayer.getHealth() > 20)) player.setHealth(sourcePlayer.getHealth());
         player.setFoodLevel(sourcePlayer.getFoodLevel());
         player.setLevel(sourcePlayer.getLevel());
         player.setExp(sourcePlayer.getExp());
+        player.setFireTicks(sourcePlayer.getFireTicks());
         player.setExhaustion(sourcePlayer.getExhaustion());
         player.setAllowFlight(sourcePlayer.getAllowFlight());
         player.setGameMode(sourcePlayer.getGameMode());
@@ -174,6 +191,9 @@ public class ControlManager {
             if (returnLocation) player.teleport(LAST_LOCATION.get(player));
             if (returnFoodLevel) player.setFoodLevel(LAST_FOODLEVEL.get(player));
             if (returnGamemode) player.setGameMode(LAST_GAMEMODE.get(player));
+
+            PLAYER_WHO_CAN_SEE.get(player).stream().filter(OfflinePlayer::isOnline).forEach(players -> players.showPlayer(player));
+            PLAYER_WHO_CAN_SEE.remove(player);
         } else {
             if (returnInventory) {
                 LAST_INVENTORY.put(player, player.getInventory().getContents());
