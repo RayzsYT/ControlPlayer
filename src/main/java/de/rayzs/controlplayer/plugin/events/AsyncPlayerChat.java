@@ -1,5 +1,7 @@
 package de.rayzs.controlplayer.plugin.events;
 
+import de.rayzs.controlplayer.plugin.ControlPlayerPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import de.rayzs.controlplayer.api.files.settings.*;
 import de.rayzs.controlplayer.api.files.message.*;
@@ -8,6 +10,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 
 public class AsyncPlayerChat extends MessageManager implements Listener {
+
+    private final ControlPlayerPlugin instance;
+
+    public AsyncPlayerChat() {
+        this.instance = ControlPlayerPlugin.getInstance();
+    }
 
     @EventHandler
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
@@ -29,7 +37,7 @@ public class AsyncPlayerChat extends MessageManager implements Listener {
         } else {
             Player victim = instance.victim();
             event.setCancelled(true);
-            victim.chat(event.getMessage());
+            Bukkit.getScheduler().scheduleSyncDelayedTask(this.instance, () -> victim.chat(event.getMessage()), 1);
         }
     }
 }
