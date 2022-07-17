@@ -24,20 +24,28 @@ public class ModernArmSwingAnimation implements ArmSwing {
     @Override
     public void execute(Player player) {
         if (disableArmSwing || player == null) return;
+        boolean is117 = versionName.contains("17");
+        String sendPacketMethodeName = is117 ? "sendPacket" : "a",
+                packetClassPath = is117 ? "net.minecraft.network.protocol.game.Packet" : "net.minecraft.network.protocol.Packet";
+
         try {
             Class<?> entityClass = Class.forName("net.minecraft.world.entity.Entity");
-            Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
-            Object animationPacket = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutAnimation").getDeclaredConstructor(entityClass, int.class).newInstance(entityPlayer, 0);
-            Object playerConnection = entityPlayer.getClass().getField("b").get(entityPlayer);
-            if(versionName.contains("17")) playerConnection.getClass().getMethod("sendPacket", Class.forName("net.minecraft.network.protocol.game.Packet")).invoke(playerConnection, animationPacket);
-            else playerConnection.getClass().getMethod("a", Class.forName("net.minecraft.network.protocol.Packet")).invoke(playerConnection, animationPacket);
-        } catch (ClassNotFoundException
+            Object entityTargetPlayer = player.getClass().getMethod("getHandle").invoke(player);
+            Object animationPacket = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutAnimation").getDeclaredConstructor(entityClass, int.class).newInstance(entityTargetPlayer, 0);
+
+            Bukkit.getOnlinePlayers().forEach(players -> {
+                try {
+                    Object entityPlayer = players.getClass().getMethod("getHandle").invoke(players);
+                    Object playerConnection = entityPlayer.getClass().getField("b").get(entityPlayer);
+                    playerConnection.getClass().getMethod(sendPacketMethodeName, Class.forName(packetClassPath)).invoke(playerConnection, animationPacket);
+                }catch (Exception exception) { exception.printStackTrace(); }
+            });
+           } catch (ClassNotFoundException
                 | NoSuchMethodException
                 | IllegalAccessException
                 | InvocationTargetException
-                | NoSuchFieldException
                 | InstantiationException exception) {
-            System.out.println("Disabled ArmSwingAnimations because this version isn't is supported!");
+            System.err.println("Disabled ArmSwingAnimations because this version isn't is supported!");
             disableArmSwing = true;
         }
     }
