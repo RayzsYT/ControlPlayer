@@ -2,13 +2,13 @@ package de.rayzs.controlplayer.plugin;
 
 import de.rayzs.controlplayer.api.files.settings.*;
 import de.rayzs.controlplayer.plugin.commands.*;
-import de.rayzs.controlplayer.plugin.events.*;
 import de.rayzs.controlplayer.api.web.WebConnection;
 import de.rayzs.controlplayer.plugin.bstats.Metrics;
-import org.bukkit.Bukkit;
+import de.rayzs.controlplayer.plugin.events.*;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Bukkit;
 
 public class ControlPlayerPlugin extends JavaPlugin {
 
@@ -16,9 +16,20 @@ public class ControlPlayerPlugin extends JavaPlugin {
 
     private boolean latestVersion = true;
     private final WebConnection web = new WebConnection();
-    private final Class<?>[] listeners = {AsyncPlayerChat.class, PlayerInteraction.class, PlayerChangeWorld.class, PlayerJoin.class, PlayerQuit.class, PlayerDeath.class};
-    private final String[] mainCommandNames = {"cp", "controlplayer", "cplayer", "controlp"}, reloadCommandNames = {"controlplayerreload", "controlplayerr", "cpr", "cpreload"};
     private int updaterTaskId;
+    private final String[] mainCommandNames = {"cp", "controlplayer", "cplayer", "controlp"},
+                           reloadCommandNames = {"controlplayerreload", "controlplayerr", "cpr", "cpreload"};
+
+    private final Class<?>[] listenerClasses = {
+                                                PlayerChangeWorld.class, PlayerDeath.class, PlayerInteract.class, PlayerInteractAtEntity.class, PlayerAnimation.class,
+                                                EntityDamage.class, EntityDamageByEntity.class, EntityTargetLivingEntity.class,
+                                                PlayerToggleFlight.class, PlayerToggleSneak.class, PlayerToggleSprint.class,
+                                                PlayerPickupItem.class, PlayerDropItem.class,
+                                                PlayerJoin.class, PlayerQuit.class,
+                                                BlockBreak.class, BlockPlace.class,
+                                                AsyncPlayerChat.class,
+                                                };
+
 
     @Override
     public void onEnable() {
@@ -41,10 +52,16 @@ public class ControlPlayerPlugin extends JavaPlugin {
     }
 
     protected void registerEvents() {
-        for (Class<?> clazz : listeners) try {
-            Listener listener = (Listener) clazz.newInstance();
-            getServer().getPluginManager().registerEvents(listener, this);
-        } catch (Exception exception) { exception.printStackTrace(); }
+        for (Class<?> clazz : listenerClasses) {
+            try {
+                Listener listener = (Listener) clazz.newInstance();
+                getServer().getPluginManager().registerEvents(listener, this);
+            }catch (InstantiationException | IllegalAccessException exception) {
+                getLogger().warning("Could not register the listener-class [" + clazz.getSimpleName() + "]!");
+                getLogger().warning("Error message:");
+                exception.printStackTrace();
+            }
+        }
     }
 
     protected void registerCommands() {
