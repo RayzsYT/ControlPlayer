@@ -8,9 +8,9 @@ public class ControlPlayerTabCompleter implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> results = new ArrayList<>();
-        if(sender.isOp() || sender.hasPermission("controlplayer.user"))
+        if(sender.isOp() || sender.hasPermission("controlplayer.use"))
             Bukkit.getOnlinePlayers().stream().filter(player
-                    -> !(player.isOp() || player.hasPermission("controlplayer.use"))).forEach(player
+                    -> !(player.isOp() || player.hasPermission("controlplayer.bypass"))).forEach(player
                     -> results.add(player.getName()));
         return results;
     }
