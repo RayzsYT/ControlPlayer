@@ -57,6 +57,9 @@ public class MessageManager {
             case ERROR:
                 FILE.set(defaultPath, defaultMessage + "&cSomething went wrong!");
                 break;
+            case NOT_ALIVE:
+                FILE.set(defaultPath, defaultMessage + "&cThe player you want to control isn't alive. (dead)");
+                break;
             case ALREADY_CONTROLLED:
                 FILE.set(defaultPath, defaultMessage + "&cSomeone else is already controlling this player!");
                 break;
