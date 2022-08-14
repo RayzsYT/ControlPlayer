@@ -12,7 +12,8 @@ public class EntityDamage implements Listener {
         if(event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             int instanceState = ControlManager.getInstanceState(player);
-            if(instanceState == 1) event.setCancelled(true);
+            if (instanceState != 1) return;
+            event.setCancelled(true);
         }
     }
 }
