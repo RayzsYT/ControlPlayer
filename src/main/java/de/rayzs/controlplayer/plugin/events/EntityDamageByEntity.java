@@ -1,5 +1,6 @@
 package de.rayzs.controlplayer.plugin.events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -7,7 +8,6 @@ import de.rayzs.controlplayer.api.control.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.util.Vector;
-
 import java.lang.reflect.Field;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -19,7 +19,7 @@ public class EntityDamageByEntity implements Listener {
         int instanceState;
         ControlInstance instance;
 
-        if(event.getDamager() instanceof Player) {
+        if (event.getDamager() instanceof Player) {
             player = (Player) event.getDamager();
             instanceState = ControlManager.getInstanceState(player);
             instance = ControlManager.getControlInstance(player);
@@ -45,9 +45,8 @@ public class EntityDamageByEntity implements Listener {
             }
         }
 
-        if(event.getEntity() instanceof Player) {
+        if (event.getEntity() instanceof Player) {
             player = (Player) event.getEntity();
-            Player attacker = event.getDamager() instanceof Player ? (Player) event.getDamager() : null;
             instanceState = ControlManager.getInstanceState(player);
             if (instanceState == 1) {
                 ControlInstance controlInstance = ControlManager.getControlInstance(player);
@@ -55,13 +54,17 @@ public class EntityDamageByEntity implements Listener {
                 event.setCancelled(false);
 
                 double healthAfterDamage = (player.getHealth() - event.getDamage());
-                if(!event.isCancelled()) pushPlayer(controller, event.getDamager());
+                if (!event.isCancelled()) pushPlayer(controller, event.getDamager());
 
+                if (healthAfterDamage < 0.5) return;
+                controller.setHealth(healthAfterDamage);
+            } else if (instanceState == 0) {
+                double healthAfterDamage = (player.getHealth() - event.getDamage());
                 if (healthAfterDamage < 0.5) {
+                    ControlInstance controlInstance = ControlManager.getControlInstance(player);
+                    Player victim = controlInstance.victim();
                     event.setCancelled(true);
-                    player.setHealth(0);
-                } else {
-                    controller.setHealth(healthAfterDamage < 0.5 ? 0 : healthAfterDamage);
+                    victim.damage(event.getDamage(), event.getDamager());
                 }
             }
         }
@@ -73,7 +76,7 @@ public class EntityDamageByEntity implements Listener {
      */
     private void pushPlayer(Entity victim, Entity attacker) {
         Vector vector = new Vector(0.0, -0.078375, 0.0);
-        if(attacker != null) {
+        if (attacker != null) {
             ThreadLocalRandom threadLocalRandom = ThreadLocalRandom.current();
             Location victimLocation = victim.getLocation(),
                     attackerLocation = attacker.getLocation();

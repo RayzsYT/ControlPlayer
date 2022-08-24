@@ -1,6 +1,6 @@
-package de.rayzs.controlplayer.plugin.events;
+ package de.rayzs.controlplayer.plugin.events;
 
-import de.rayzs.controlplayer.api.control.ControlManager;
+import de.rayzs.controlplayer.api.control.*;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
@@ -12,8 +12,16 @@ public class EntityDamage implements Listener {
         if(event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             int instanceState = ControlManager.getInstanceState(player);
-            if (instanceState != 1) return;
-            event.setCancelled(true);
+            if (instanceState != 0) return;
+
+            double healthAfterDamage = (player.getHealth() - event.getDamage());
+            ControlInstance controlInstance = ControlManager.getControlInstance(player);
+            Player victim = controlInstance.victim();
+
+            if(healthAfterDamage < 0.5) {
+                event.setCancelled(true);
+                victim.damage(event.getDamage());
+            } else victim.setHealth(healthAfterDamage);
         }
     }
 }
