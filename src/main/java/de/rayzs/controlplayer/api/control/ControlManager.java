@@ -2,7 +2,7 @@ package de.rayzs.controlplayer.api.control;
 
 import java.util.*;
 
-import de.rayzs.controlplayer.api.files.message.*;
+import de.rayzs.controlplayer.api.files.messages.*;
 import de.rayzs.controlplayer.api.listener.*;
 import de.rayzs.controlplayer.api.files.settings.*;
 import de.rayzs.controlplayer.api.packetbased.actionbar.Actionbar;
@@ -124,6 +124,25 @@ public class ControlManager {
         return false;
     }
 
+    public static void deleteSafeControlInstance(Player player) {
+        Optional<ControlInstance> instanceOption = INSTANCES.stream().filter(instance
+                -> instance.controller() == player || instance.victim() == player).findFirst();
+
+        if(instanceOption.isPresent()) {
+            ControlInstance controlInstance = instanceOption.get();
+            Player victim = controlInstance.victim(), controller = controlInstance.controller();
+            if(victim != null && controller != null) controlInstance.controller().showPlayer(controlInstance.victim());
+            if(victim != null) victim.spigot().setCollidesWithEntities(true);
+            INSTANCES.remove(controlInstance);
+            if(controller == null) return;
+            ControlPlayerEventManager.call(ControlPlayerEventType.STOP, controller, victim);
+            if(!apiMode) {
+                controller.setHealth(20);
+                Bukkit.getScheduler().runTaskLater(ControlPlayerPlugin.getInstance(), () -> saveOrReturnController(controller, true), 1);
+            }
+        }
+    }
+
     public static ControlInstance getControlInstance(Player player) {
         Optional<ControlInstance> instanceOption = INSTANCES.stream().filter(instance
                 -> instance.controller() == player || instance.victim() == player).findFirst();
@@ -191,7 +210,6 @@ public class ControlManager {
             if (returnLocation) player.teleport(LAST_LOCATION.get(player));
             if (returnFoodLevel) player.setFoodLevel(LAST_FOODLEVEL.get(player));
             if (returnGamemode) player.setGameMode(LAST_GAMEMODE.get(player));
-
             PLAYER_WHO_CAN_SEE.get(player).stream().filter(OfflinePlayer::isOnline).forEach(players -> players.showPlayer(player));
             PLAYER_WHO_CAN_SEE.remove(player);
         } else {
