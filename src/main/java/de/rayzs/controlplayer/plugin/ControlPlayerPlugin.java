@@ -22,16 +22,6 @@ public class ControlPlayerPlugin extends JavaPlugin {
     private final String[] mainCommandNames = {"cp", "controlplayer", "cplayer", "controlp"},
             reloadCommandNames = {"controlplayerreload", "controlplayerr", "cpr", "cpreload"};
 
-    private final AtomicInteger urlId = new AtomicInteger();
-    private final String path = "https://www.rayzs.de/products/controlplayer/version/";
-    private final String[] urls = {
-            "index.php", // I can't completely switch to the new url bcs many people are using my old system and need the old system. 
-                         // Idk why I made a php file for that. I'm sooo stupid ngl. 
-                         // I just made the php file that it reads the input from the raw/version.txt file...
-            
-            "raw/version.txt" // A backup page to get the current version. Should be the default update-page in the future.
-    };
-
     private final Class<?>[] listenerClasses = {
             PlayerChangeWorld.class, PlayerDeath.class, PlayerInteract.class, PlayerInteractAtEntity.class, PlayerAnimation.class,
             EntityDamage.class, EntityDamageByEntity.class, EntityTargetLivingEntity.class,
@@ -95,37 +85,25 @@ public class ControlPlayerPlugin extends JavaPlugin {
 
     protected void startUpdaterTask() {
         Object updateObject = SettingsManager.getSetting(SettingType.UPDATER_ENABLED);
-        boolean update = updateObject == null || (boolean) updateObject;
-        if(!update) return;
+        boolean update = (updateObject == null || (boolean) updateObject);
+        if (!update)
+            return;
         Object delayObject = SettingsManager.getSetting(SettingType.UPDATER_DELAY);
-        int configDelay = delayObject == null ? 18000 : (int) delayObject;
-        startUpdaterScheduler(20, 20, configDelay);
-    }
-
-    private void startUpdaterScheduler(int startDelay, int delay, int configDelay) {
+        int delay = (delayObject == null) ? 18000 : (int) delayObject;
         updaterTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            int id = urlId.get();
-
-            if(id == 1) getLogger().info("Switched to 'raw' page to check if the plugin is outdated.");
-            else if(id > 1) {
-                getLogger().warning("Failed reaching web host! (blocked by firewall? website down?)");
-                Bukkit.getScheduler().cancelTask(updaterTaskId);
-                return;
+            String result = web.connect("https://www.rayzs.de/products/controlplayer/version/version.txt").getResult();
+            if (!result.equals(getDescription().getVersion())) {
+                Bukkit.getScheduler().cancelTask(this.updaterTaskId);
+                if (result.equals("unknown")) {
+                    getLogger().warning("Failed reaching web host! (firewall enabled? website down?)");
+                } else if (result.equals("exception")) {
+                    getLogger().warning("Failed creating web instance! (outdated java version?)");
+                } else {
+                    getLogger().warning("You're using an outdated version of this plugin!");
+                    getLogger().warning("Please update it on: https://www.rayzs.de/products/controlplayer/page");
+                }
+                this.latestVersion = false;
             }
-
-            web.connect(path + urls[id]);
-            String result = web.getResult();
-
-            if(result.equals("unknown") || result.equals("exception")) urlId.addAndGet(1);
-            else if(!getDescription().getVersion().equals(result)) {
-                latestVersion = false;
-                Bukkit.getScheduler().cancelTask(updaterTaskId);
-                getLogger().warning("You're using an outdated version of this plugin!");
-                getLogger().warning("Please update it on: https://www.rayzs.de/products/controlplayer/page");
-            } else {
-                Bukkit.getScheduler().cancelTask(updaterTaskId);
-                startUpdaterScheduler(configDelay, configDelay, configDelay);
-            }
-        }, startDelay, delay);
+        }, 20L, delay);
     }
 }
