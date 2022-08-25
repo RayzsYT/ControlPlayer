@@ -1,6 +1,5 @@
 package de.rayzs.controlplayer.plugin.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -13,11 +12,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class EntityDamageByEntity implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player player;
         int instanceState;
         ControlInstance instance;
+
+        if(event.isCancelled()) return;
 
         if (event.getDamager() instanceof Player) {
             player = (Player) event.getDamager();

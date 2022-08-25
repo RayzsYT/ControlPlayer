@@ -7,12 +7,14 @@ import org.bukkit.event.*;
 
 public class EntityDamage implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if(event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             int instanceState = ControlManager.getInstanceState(player);
             if (instanceState != 0) return;
+
+            if(event.isCancelled()) return;
 
             double healthAfterDamage = (player.getHealth() - event.getDamage());
             ControlInstance controlInstance = ControlManager.getControlInstance(player);
