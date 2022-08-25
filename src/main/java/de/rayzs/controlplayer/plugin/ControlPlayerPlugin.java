@@ -25,8 +25,11 @@ public class ControlPlayerPlugin extends JavaPlugin {
     private final AtomicInteger urlId = new AtomicInteger();
     private final String path = "https://www.rayzs.de/products/controlplayer/version/";
     private final String[] urls = {
-            "index.php", // I can't completely switch to the new url bcs many people are using my old system and need the old system. Idk why I made a php file for that. I'm sooo stupid ngl. I just made the php file that it reads the input from the raw/version.txt file...
-            "raw/version.txt" // A backup page to get the current version.
+            "index.php", // I can't completely switch to the new url bcs many people are using my old system and need the old system. 
+                         // Idk why I made a php file for that. I'm sooo stupid ngl. 
+                         // I just made the php file that it reads the input from the raw/version.txt file...
+            
+            "raw/version.txt" // A backup page to get the current version. Should be the default update-page in the future.
     };
 
     private final Class<?>[] listenerClasses = {
