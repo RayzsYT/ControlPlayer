@@ -11,7 +11,7 @@ public class WebConnection {
 
     private String result = null;
 
-    public void connect(String rawUrl) {
+    public WebConnection connect(String rawUrl) {
         try {
             URL url = new URL(rawUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -28,6 +28,7 @@ public class WebConnection {
             result = "exception";
             exception.printStackTrace();
         }
+        return this;
     }
 
     public String getResult() { return result; }
