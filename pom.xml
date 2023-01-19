@@ -6,7 +6,13 @@
 
     <groupId>de.rayzs.controlplayer</groupId>
     <artifactId>ControlPlayer</artifactId>
+    <packaging>pom</packaging>
     <version>2.2.10</version>
+
+    <modules>
+        <module>Plugin</module>
+        <module>API</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -28,4 +34,5 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
 </project>

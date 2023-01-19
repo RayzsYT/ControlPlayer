@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/API/API.iml" filepath="$PROJECT_DIR$/API/API.iml" />
       <module fileurl="file://$PROJECT_DIR$/ControlPlayer.iml" filepath="$PROJECT_DIR$/ControlPlayer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Plugin/Plugin.iml" filepath="$PROJECT_DIR$/Plugin/Plugin.iml" />
     </modules>
   </component>
 </project>
