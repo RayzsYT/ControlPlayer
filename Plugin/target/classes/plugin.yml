@@ -1,0 +1,18 @@
+name: ControlPlayer
+version: 2.3.0
+main: de.rayzs.controlplayer.plugin.ControlPlayerPlugin
+author: Rayzs_YT
+api-version: 1.13
+
+commands:
+  controlplayer:
+    aliases: [cp, cplayer, controlp, control]
+    description: Control the movement of a player
+
+  silentcontrolplayer:
+    aliases: [scp, scontrolplayer, scplayer]
+    description: Activate the toggle-mode to control the movement of the player
+
+  controlplayerreload:
+    aliases: [cpr, controlplayerr, cpreload]
+    description: Reload all files
