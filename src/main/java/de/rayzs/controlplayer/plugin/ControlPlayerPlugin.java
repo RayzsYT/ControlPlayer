@@ -10,8 +10,6 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.Bukkit;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class ControlPlayerPlugin extends JavaPlugin {
 
     private static ControlPlayerPlugin instance;
@@ -29,7 +27,7 @@ public class ControlPlayerPlugin extends JavaPlugin {
             PlayerPickupItem.class, PlayerDropItem.class,
             PlayerJoin.class, PlayerQuit.class,
             BlockBreak.class, BlockPlace.class,
-            AsyncPlayerChat.class,
+            PlayerChat.class,
     };
 
 
@@ -90,7 +88,7 @@ public class ControlPlayerPlugin extends JavaPlugin {
             return;
         Object delayObject = SettingsManager.getSetting(SettingType.UPDATER_DELAY);
         int delay = (delayObject == null) ? 18000 : (int) delayObject;
-        updaterTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+        updaterTaskId = Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, () -> {
             String result = web.connect("https://www.rayzs.de/products/controlplayer/version/version.txt").getResult();
             if (!result.equals(getDescription().getVersion())) {
                 Bukkit.getScheduler().cancelTask(this.updaterTaskId);
