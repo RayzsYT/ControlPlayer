@@ -1,11 +1,16 @@
 package de.rayzs.controlplayer.plugin.commands;
 
-import de.rayzs.controlplayer.api.control.*;
-import de.rayzs.controlplayer.api.files.messages.*;
-import org.bukkit.command.*;
+import de.rayzs.controlplayer.api.control.ControlManager;
+import de.rayzs.controlplayer.api.control.ControlState;
+import de.rayzs.controlplayer.api.files.messages.MessageManager;
+import de.rayzs.controlplayer.api.files.messages.MessageType;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-public class ControlPlayerCommand extends MessageManager implements CommandExecutor {
+
+public class SilentControlPlayerCommand extends MessageManager implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -17,7 +22,7 @@ public class ControlPlayerCommand extends MessageManager implements CommandExecu
             return true;
         }
 
-        if(!(sender.isOp() || sender.hasPermission("controlplayer.use"))) {
+        if(!(sender.isOp() || sender.hasPermission("controlplayer.silent.use"))) {
             sender.sendMessage(getMessage(MessageType.NO_PERMISSION));
             return true;
         }
@@ -42,9 +47,9 @@ public class ControlPlayerCommand extends MessageManager implements CommandExecu
                             if (!(victim.isOp() || victim.hasPermission("controlplayer.bypass"))) {
                                 if (!victim.isDead()) {
                                     if (victimInstance != 1) {
-                                        ControlState state = ControlManager.createControlInstance(player, victim, false);
+                                        ControlState state = ControlManager.createControlInstance(player, victim, true);
                                         if (state == ControlState.SUCCESS)
-                                            sender.sendMessage(getMessage(MessageType.NORMAL_SUCCESS).replace("%player%", victim.getName()));
+                                            sender.sendMessage(getMessage(MessageType.SILENT_SUCCESS).replace("%player%", victim.getName()));
                                         else sender.sendMessage(getMessage(MessageType.ERROR));
                                     } else sender.sendMessage(getMessage(MessageType.ALREADY_CONTROLLED));
                                 } else sender.sendMessage(getMessage(MessageType.NOT_ALIVE));
@@ -55,7 +60,7 @@ public class ControlPlayerCommand extends MessageManager implements CommandExecu
                 }
         }
 
-        if(sendHelp) sender.sendMessage(getMessage(MessageType.NORMAL_USAGE));
+        if(sendHelp) sender.sendMessage(getMessage(MessageType.SILENT_USAGE));
         return true;
     }
 }

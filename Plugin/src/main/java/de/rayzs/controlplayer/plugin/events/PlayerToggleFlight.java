@@ -12,16 +12,16 @@ public class PlayerToggleFlight implements Listener {
         Player player = event.getPlayer();
         int instanceState = ControlManager.getInstanceState(player);
         ControlInstance instance = ControlManager.getControlInstance(player);
-        switch (instanceState) {
-            case 0:
-                if(instance.victim() == player) return;
+        if(instance == null) return;
 
-                Player victim = instance.victim();
-                victim.setFlying(event.isFlying());
-                break;
-            case 1:
-                event.setCancelled(true);
-                break;
+        ControlSwap swap = ControlManager.getControlSwap(instance);
+        boolean useSwap = swap.isEnabled() && swap.isSwapped();
+        if (useSwap && instanceState == 0 || !useSwap && instanceState == 1) event.setCancelled(true);
+        else {
+            if(instance.victim() == player) return;
+
+            Player victim = instance.victim();
+            victim.setFlying(event.isFlying());
         }
     }
 }

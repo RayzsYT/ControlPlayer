@@ -17,6 +17,8 @@ de\rayzs\controlplayer\api\files\settings\SettingType.class
 de\rayzs\controlplayer\api\listener\ControlPlayerEventManager.class
 de\rayzs\controlplayer\api\packetbased\animation\impl\ModernArmSwingAnimation.class
 de\rayzs\controlplayer\api\control\ControlManager.class
+de\rayzs\controlplayer\api\counter\Counter.class
+de\rayzs\controlplayer\api\control\ControlSwap.class
 de\rayzs\controlplayer\api\packetbased\animation\ArmSwingAnimation.class
 de\rayzs\controlplayer\api\version\ServerVersion.class
 de\rayzs\controlplayer\api\control\ControlManager$1.class

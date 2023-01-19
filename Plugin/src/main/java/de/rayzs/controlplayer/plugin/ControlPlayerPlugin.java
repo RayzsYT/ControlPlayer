@@ -19,13 +19,14 @@ public class ControlPlayerPlugin extends JavaPlugin {
     private int updaterTaskId;
     private final WebConnection web = new WebConnection();
     private final String[] mainCommandNames = {"cp", "controlplayer", "cplayer", "controlp"},
+            subCommandNames = {"scp", "silentcontrolplayer", "scontrolplayer", "scplayer"},
             reloadCommandNames = {"controlplayerreload", "controlplayerr", "cpr", "cpreload"};
 
     private final Class<?>[] listenerClasses = {
             PlayerChangeWorld.class, PlayerDeath.class, PlayerInteract.class, PlayerInteractAtEntity.class, PlayerAnimation.class,
             EntityDamage.class, EntityDamageByEntity.class, EntityTargetLivingEntity.class,
             PlayerToggleFlight.class, PlayerToggleSneak.class, PlayerToggleSprint.class,
-            PlayerPickupItem.class, PlayerDropItem.class,
+            PlayerPickupItem.class, PlayerDropItem.class, PlayerMove.class,
             PlayerJoin.class, PlayerQuit.class,
             BlockBreak.class, BlockPlace.class,
             PlayerChat.class,
@@ -68,12 +69,19 @@ public class ControlPlayerPlugin extends JavaPlugin {
 
     protected void registerCommands() {
         ControlPlayerCommand mainCommandClass = new ControlPlayerCommand();
+        SilentControlPlayerCommand subCommandClass = new SilentControlPlayerCommand();
         ControlPlayerReloadCommand reloadCommandClass = new ControlPlayerReloadCommand();
         ControlPlayerTabCompleter tabCompleterClass = new ControlPlayerTabCompleter();
 
         for (String commandName : mainCommandNames) {
             PluginCommand command = getCommand(commandName);
             command.setExecutor(mainCommandClass);
+            command.setTabCompleter(tabCompleterClass);
+        }
+
+        for (String commandName : subCommandNames) {
+            PluginCommand command = getCommand(commandName);
+            command.setExecutor(subCommandClass);
             command.setTabCompleter(tabCompleterClass);
         }
 

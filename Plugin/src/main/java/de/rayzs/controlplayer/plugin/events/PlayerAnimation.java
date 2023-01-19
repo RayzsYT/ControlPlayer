@@ -14,16 +14,12 @@ public class PlayerAnimation extends ArmSwingAnimation implements Listener {
         String animationTypeAsString = event.getAnimationType().toString().toLowerCase();
         int instanceState = ControlManager.getInstanceState(player);
         ControlInstance instance = ControlManager.getControlInstance(player);
-        if(animationTypeAsString.contains("arm") && animationTypeAsString.contains("swing"))
-        switch (instanceState) {
-            case 0:
-                if(instance.victim() == player) return;
-                Player victim = instance.victim();
-                execute(victim);
-                break;
-            case 1:
-                event.setCancelled(true);
-                break;
-        }
+        if(instance == null || !(animationTypeAsString.contains("arm") && animationTypeAsString.contains("swing"))) return;
+        if(!animationTypeAsString.contains("arm") && !animationTypeAsString.contains("swing")) return;
+
+        ControlSwap swap = ControlManager.getControlSwap(instance);
+        boolean useSwap = swap.isEnabled() && swap.isSwapped();
+        if (useSwap && instanceState == 0 || !useSwap && instanceState == 1) event.setCancelled(true);
+        else if(!useSwap) execute(instance.victim());
     }
 }

@@ -10,7 +10,12 @@ public class BlockBreak implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
+        ControlInstance instance = ControlManager.getControlInstance(player);
+        if(instance == null) return;
+
+        ControlSwap swap = ControlManager.getControlSwap(instance);
         int instanceState = ControlManager.getInstanceState(player);
-        if (instanceState == 1) event.setCancelled(true);
+        boolean useSwap = swap.isEnabled() && swap.isSwapped();
+        if (useSwap && instanceState == 0 || !useSwap && instanceState == 1) event.setCancelled(true);
     }
 }

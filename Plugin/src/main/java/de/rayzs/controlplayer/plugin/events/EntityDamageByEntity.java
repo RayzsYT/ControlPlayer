@@ -60,9 +60,13 @@ public class EntityDamageByEntity implements Listener {
                 if (healthAfterDamage < 0.5) return;
                 controller.setHealth(healthAfterDamage);
             } else if (instanceState == 0) {
+                ControlInstance controlInstance = ControlManager.getControlInstance(player);
+                if (!event.isCancelled()) {
+                    ControlSwap swap = ControlManager.getControlSwap(controlInstance);
+                    pushPlayer(swap.isSwapped() ? controlInstance.victim() : controlInstance.controller(), event.getDamager());
+                }
                 double healthAfterDamage = (player.getHealth() - event.getDamage());
                 if (healthAfterDamage < 0.5) {
-                    ControlInstance controlInstance = ControlManager.getControlInstance(player);
                     Player victim = controlInstance.victim();
                     event.setCancelled(true);
                     victim.damage(event.getDamage(), event.getDamager());

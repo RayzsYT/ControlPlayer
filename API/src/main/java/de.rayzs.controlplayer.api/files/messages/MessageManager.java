@@ -43,17 +43,26 @@ public class MessageManager {
             case PREFIX:
                 FILE.set(defaultPath, "&8[&4&lC&c&lP&8]");
                 break;
-            case ACTIONBAR_TEXT:
+            case CONTROLLING_ACTIONBAR_TEXT:
                 FILE.set(defaultPath, "&aYou are controlling %player%");
+                break;
+            case WAITING_ACTIONBAR_TEXT:
+                FILE.set(defaultPath, "&eLEFT CLICK 3x &7to toggle control-mode!");
                 break;
             case BEING_CONTROLLED:
                 FILE.set(defaultPath, defaultMessage + "You were being controlled right now!");
                 break;
-            case USAGE:
+            case NORMAL_USAGE:
                 FILE.set(defaultPath, defaultMessage + "&7Use &e/cp [player] &7to control someone. Execute this command again to stop controlling the player.");
                 break;
-            case SUCCESS:
+            case SILENT_USAGE:
+                FILE.set(defaultPath, defaultMessage + "&7Use &e/scp [player] &7to control someone. Execute this command again to stop controlling the player.");
+                break;
+            case NORMAL_SUCCESS:
                 FILE.set(defaultPath, defaultMessage + "&aYou are controlling %player%!");
+                break;
+            case SILENT_SUCCESS:
+                FILE.set(defaultPath, defaultMessage + "&aYou are controlling %player%! Press &eLEFT CLICK 3x &ato take control of the player. Hold &eSNEAK &aand click &eLEFT CLICK 3x §ato free the player again!");
                 break;
             case ERROR:
                 FILE.set(defaultPath, defaultMessage + "&cSomething went wrong!");

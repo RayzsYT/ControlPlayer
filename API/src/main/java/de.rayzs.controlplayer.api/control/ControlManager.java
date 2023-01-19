@@ -1,5 +1,7 @@
 package de.rayzs.controlplayer.api.control;
 
+import com.google.gson.JsonParser;
+import com.google.gson.annotations.Since;
 import de.rayzs.controlplayer.api.files.messages.*;
 import de.rayzs.controlplayer.api.files.settings.*;
 import de.rayzs.controlplayer.api.listener.*;
@@ -16,6 +18,7 @@ public class ControlManager {
 
     private static Plugin plugin = null;
 
+    private static final HashMap<ControlInstance, ControlSwap> SWAPPED_INSTANCES = new HashMap<>();
     private static final HashMap<Player, Integer> LAST_FOODLEVEL = new HashMap<>(), LAST_LEVEL = new HashMap<>(), LAST_TOTALEXCPERIENCE = new HashMap<>();
     private static final HashMap<Player, Boolean> LAST_ALLOWED_FLIGHT = new HashMap<>(), LAST_FLYING = new HashMap<>();
     private static final HashMap<Player, ItemStack[]> LAST_INVENTORY = new HashMap<>(), LAST_ARMOR = new HashMap<>();
@@ -29,7 +32,8 @@ public class ControlManager {
     private static boolean apiMode, sendActionbar, returnInventory, returnLocation, returnHealth, returnFoodLevel, returnGamemode, returnFlight,returnLevel;
 
     private static Actionbar actionbar = new Actionbar();
-    private static String actionbarText = MessageManager.getMessage(MessageType.ACTIONBAR_TEXT);
+    private static String controllingActionbarText = MessageManager.getMessage(MessageType.CONTROLLING_ACTIONBAR_TEXT),
+            waitingActionbarText = MessageManager.getMessage(MessageType.WAITING_ACTIONBAR_TEXT);
 
     public static void load(Plugin bukkitPlugin) {
         plugin = bukkitPlugin;
@@ -55,12 +59,24 @@ public class ControlManager {
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             if(!INSTANCES.isEmpty()) INSTANCES.forEach(instance -> {
-                if(!apiMode) instance.victim().teleport(instance.controller());
+                if(!apiMode) {
+                    ControlSwap swap = getControlSwap(instance);
+                    if(swap != null && swap.isEnabled()) {
+                        boolean swapped = swap.isSwapped();
+                        if(sendActionbar)
+                            actionbar.execute(instance.controller(), (swapped ? waitingActionbarText : controllingActionbarText).replace("%player%", instance.victim().getName()));
+                        if(swapped) instance.controller().teleport(instance.victim());
+                        else instance.victim().teleport(instance.controller());
+                    } else {
+                        actionbar.execute(instance.controller(), controllingActionbarText.replace("%player%", instance.victim().getName()));
+                        instance.victim().teleport(instance.controller());
+                    }
+                }
             });
         }, 0L, 0L);
     }
 
-    public static ControlState createControlInstance(Player controller, Player victim) {
+    public static ControlState createControlInstance(Player controller, Player victim, boolean useSwap) {
         if(controller == null
                 || victim == null
                 || !controller.isOnline()
@@ -76,10 +92,17 @@ public class ControlManager {
             @Override public Player controller() { return controller; }
             @Override public void onTick() {
                 ControlPlayerEventManager.call(ControlPlayerEventType.RUNNING, controller, victim);
-                if(!apiMode) syncPlayers(controller, victim, false);
+                if(!apiMode) {
+                    ControlSwap swap = getControlSwap(this);
+                    if(swap != null && swap.isEnabled()) {
+                        boolean swapped = swap.isSwapped();
+                        syncPlayers(swapped ? victim : controller, swapped ? controller : victim, false);
+                    } else syncPlayers(controller, victim, false);
+                }
             }
         };
 
+        SWAPPED_INSTANCES.put(controlInstance, new ControlSwap(useSwap));
         INSTANCES.add(controlInstance);
 
         ControlPlayerEventManager.call(ControlPlayerEventType.START, controller, victim);
@@ -153,6 +176,10 @@ public class ControlManager {
         return instanceOption.orElse(null);
     }
 
+    public static ControlSwap getControlSwap(ControlInstance instance) {
+        return SWAPPED_INSTANCES.get(instance);
+    }
+
     public static int getInstanceState(Player player) {
         AtomicBoolean isOwner = new AtomicBoolean(false);
         Optional<ControlInstance> instanceOption = INSTANCES.stream().filter(instance -> {
@@ -165,7 +192,6 @@ public class ControlManager {
     }
 
     protected static void syncPlayers(Player controller, Player victim, boolean start) {
-        if(sendActionbar) actionbar.execute(controller, actionbarText.replace("%player%", victim.getName()));
         if(start) {
             controller.hidePlayer(victim);
             controller.teleport(victim.getLocation());

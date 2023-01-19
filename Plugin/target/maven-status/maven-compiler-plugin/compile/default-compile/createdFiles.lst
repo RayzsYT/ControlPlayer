@@ -15,12 +15,14 @@ de\rayzs\controlplayer\plugin\events\PlayerInteractAtEntity.class
 de\rayzs\controlplayer\plugin\events\BlockBreak.class
 de\rayzs\controlplayer\plugin\events\PlayerToggleFlight.class
 de\rayzs\controlplayer\plugin\events\EntityTargetLivingEntity.class
+de\rayzs\controlplayer\plugin\events\PlayerMove.class
 de\rayzs\controlplayer\plugin\ControlPlayerPlugin.class
 de\rayzs\controlplayer\plugin\commands\ControlPlayerCommand.class
 de\rayzs\controlplayer\plugin\events\PlayerInteract.class
 de\rayzs\controlplayer\plugin\bstats\Metrics$AdvancedBarChart.class
 de\rayzs\controlplayer\plugin\bstats\Metrics$MetricsBase.class
 de\rayzs\controlplayer\plugin\events\PlayerToggleSneak.class
+de\rayzs\controlplayer\plugin\commands\SilentControlPlayerCommand.class
 de\rayzs\controlplayer\plugin\bstats\Metrics$JsonObjectBuilder$JsonObject.class
 de\rayzs\controlplayer\plugin\bstats\Metrics$MultiLineChart.class
 de\rayzs\controlplayer\plugin\bstats\Metrics$CustomChart.class
