@@ -16,7 +16,7 @@ public class PlayerJoin extends MessageManager implements Listener {
         this.instance = ControlPlayerPlugin.getInstance();
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         ControlManager.hideAllControllers(player);

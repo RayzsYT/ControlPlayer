@@ -8,7 +8,7 @@ import org.bukkit.event.*;
 
 public class PlayerAnimation extends ArmSwingAnimation implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onPlayerAnimation(PlayerAnimationEvent event) {
         Player player = event.getPlayer();
         String animationTypeAsString = event.getAnimationType().toString().toLowerCase();

@@ -7,7 +7,7 @@ import org.bukkit.event.*;
 
 public class BlockBreak implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         ControlInstance instance = ControlManager.getControlInstance(player);

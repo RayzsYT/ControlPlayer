@@ -7,7 +7,7 @@ import org.bukkit.event.*;
 
 public class EntityTargetLivingEntity implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
         if(!(event.getTarget() instanceof Player)) return;
         Player player = (Player) event.getTarget();

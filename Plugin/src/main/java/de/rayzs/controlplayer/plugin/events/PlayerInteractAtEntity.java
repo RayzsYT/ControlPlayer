@@ -7,7 +7,7 @@ import org.bukkit.event.*;
 
 public class PlayerInteractAtEntity implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
         Player player = event.getPlayer();
         ControlInstance instance = ControlManager.getControlInstance(player);

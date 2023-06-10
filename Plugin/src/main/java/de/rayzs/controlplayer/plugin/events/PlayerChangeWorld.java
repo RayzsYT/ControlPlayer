@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 public class PlayerChangeWorld implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
         ControlManager.hideAllControllers(player);

@@ -7,7 +7,7 @@ import org.bukkit.event.*;
 
 public class BlockPlace implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         ControlInstance instance = ControlManager.getControlInstance(player);

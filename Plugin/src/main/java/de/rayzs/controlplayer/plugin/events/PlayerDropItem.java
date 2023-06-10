@@ -9,7 +9,7 @@ import org.bukkit.event.*;
 
 public class PlayerDropItem implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         ControlInstance instance = ControlManager.getControlInstance(player);

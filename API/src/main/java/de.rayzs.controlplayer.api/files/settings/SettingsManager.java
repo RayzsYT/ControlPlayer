@@ -43,6 +43,7 @@ public class SettingsManager {
             case UPDATER_DELAY: FILE.set(defaultPath, 18000); break;
             case CONTROL_RUNNING_SYNCDELAY: FILE.set(defaultPath, 0); break;
             case CONTROL_RUNNING_FORCECHAT_BYPASSMESSAGE:FILE.set(defaultPath, "-b "); break;
+            case SYSTEM_ASYNCCHAT: FILE.set(defaultPath, false);
             default: FILE.set(defaultPath, true); break;
         }
         FILE.save();

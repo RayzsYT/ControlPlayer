@@ -1,7 +1,5 @@
 package de.rayzs.controlplayer.api.control;
 
-import com.google.gson.JsonParser;
-import com.google.gson.annotations.Since;
 import de.rayzs.controlplayer.api.files.messages.*;
 import de.rayzs.controlplayer.api.files.settings.*;
 import de.rayzs.controlplayer.api.listener.*;
@@ -65,11 +63,10 @@ public class ControlManager {
                         boolean swapped = swap.isSwapped();
                         if(sendActionbar)
                             actionbar.execute(instance.controller(), (swapped ? waitingActionbarText : controllingActionbarText).replace("%player%", instance.victim().getName()));
-                        if(swapped) instance.controller().teleport(instance.victim());
-                        else instance.victim().teleport(instance.controller());
+                        (swapped ? instance.controller() : instance.victim()).teleport((swapped ? instance.victim() : instance.controller()));
                     } else {
                         actionbar.execute(instance.controller(), controllingActionbarText.replace("%player%", instance.victim().getName()));
-                        instance.victim().teleport(instance.controller());
+                        instance.victim().teleport(instance.controller().getLocation());
                     }
                 }
             });

@@ -7,7 +7,7 @@ import org.bukkit.event.*;
 
 public class PlayerToggleSprint implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
         Player player = event.getPlayer();
         int instanceState = ControlManager.getInstanceState(player);

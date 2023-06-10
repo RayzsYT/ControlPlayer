@@ -7,7 +7,7 @@ import org.bukkit.event.*;
 
 public class PlayerToggleSneak implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
         Player player = event.getPlayer();
         int instanceState = ControlManager.getInstanceState(player);

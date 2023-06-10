@@ -8,7 +8,7 @@ import org.bukkit.event.*;
 
 public class PlayerQuit extends MessageManager implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         int instanceState = ControlManager.getInstanceState(player);

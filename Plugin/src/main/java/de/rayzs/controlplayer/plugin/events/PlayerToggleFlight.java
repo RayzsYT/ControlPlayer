@@ -7,7 +7,7 @@ import org.bukkit.event.*;
 
 public class PlayerToggleFlight implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
         Player player = event.getPlayer();
         int instanceState = ControlManager.getInstanceState(player);
