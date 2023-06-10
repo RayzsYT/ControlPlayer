@@ -15,7 +15,6 @@ de\rayzs\controlplayer\plugin\events\PlayerInteractAtEntity.class
 de\rayzs\controlplayer\plugin\events\BlockBreak.class
 de\rayzs\controlplayer\plugin\events\PlayerToggleFlight.class
 de\rayzs\controlplayer\plugin\events\EntityTargetLivingEntity.class
-de\rayzs\controlplayer\plugin\events\PlayerMove.class
 de\rayzs\controlplayer\plugin\ControlPlayerPlugin.class
 de\rayzs\controlplayer\plugin\commands\ControlPlayerCommand.class
 de\rayzs\controlplayer\plugin\events\PlayerInteract.class
@@ -29,6 +28,7 @@ de\rayzs\controlplayer\plugin\bstats\Metrics$CustomChart.class
 de\rayzs\controlplayer\plugin\bstats\Metrics$SimpleBarChart.class
 de\rayzs\controlplayer\plugin\bstats\Metrics$SingleLineChart.class
 de\rayzs\controlplayer\plugin\events\BlockPlace.class
+de\rayzs\controlplayer\plugin\events\InventoryInteraction.class
 de\rayzs\controlplayer\plugin\events\PlayerDropItem.class
 de\rayzs\controlplayer\plugin\commands\ControlPlayerTabCompleter.class
 de\rayzs\controlplayer\plugin\events\PlayerChat.class
