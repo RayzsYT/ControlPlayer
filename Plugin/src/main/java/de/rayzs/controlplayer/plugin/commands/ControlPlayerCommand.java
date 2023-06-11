@@ -2,6 +2,8 @@ package de.rayzs.controlplayer.plugin.commands;
 
 import de.rayzs.controlplayer.api.control.*;
 import de.rayzs.controlplayer.api.files.messages.*;
+import de.rayzs.controlplayer.api.files.settings.SettingType;
+import de.rayzs.controlplayer.api.files.settings.SettingsManager;
 import org.bukkit.command.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -39,7 +41,7 @@ public class ControlPlayerCommand extends MessageManager implements CommandExecu
                     if (victim != null) {
                         int victimInstance = ControlManager.getInstanceState(victim);
                         if (victim != player) {
-                            if (!(victim.isOp() || victim.hasPermission("controlplayer.bypass"))) {
+                            if ((boolean) SettingsManager.getSetting(SettingType.SYSTEM_IGNOREBYPASS) || !(victim.isOp() || victim.hasPermission("controlplayer.bypass"))) {
                                 if (!victim.isDead()) {
                                     if (victimInstance != 1) {
                                         ControlState state = ControlManager.createControlInstance(player, victim, false);

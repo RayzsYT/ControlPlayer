@@ -6,7 +6,6 @@ E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\cont
 E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\controlplayer\plugin\events\PlayerPickupItem.java
 E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\controlplayer\plugin\commands\ControlPlayerCommand.java
 E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\controlplayer\plugin\events\PlayerQuit.java
-E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\controlplayer\plugin\events\PlayerMove.java
 E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\controlplayer\plugin\events\PlayerDeath.java
 E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\controlplayer\plugin\events\PlayerToggleSneak.java
 E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\controlplayer\plugin\events\PlayerAnimation.java
@@ -21,5 +20,6 @@ E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\cont
 E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\controlplayer\plugin\commands\SilentControlPlayerCommand.java
 E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\controlplayer\plugin\events\PlayerInteract.java
 E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\controlplayer\plugin\events\PlayerChangeWorld.java
+E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\controlplayer\plugin\events\InventoryInteraction.java
 E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\controlplayer\plugin\events\PlayerJoin.java
 E:\Programmieren\Plugins\Public\ControlPlayer\Plugin\src\main\java\de\rayzs\controlplayer\plugin\commands\ControlPlayerTabCompleter.java

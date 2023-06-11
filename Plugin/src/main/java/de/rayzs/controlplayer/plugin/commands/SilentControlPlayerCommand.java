@@ -4,6 +4,8 @@ import de.rayzs.controlplayer.api.control.ControlManager;
 import de.rayzs.controlplayer.api.control.ControlState;
 import de.rayzs.controlplayer.api.files.messages.MessageManager;
 import de.rayzs.controlplayer.api.files.messages.MessageType;
+import de.rayzs.controlplayer.api.files.settings.SettingType;
+import de.rayzs.controlplayer.api.files.settings.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -44,7 +46,7 @@ public class SilentControlPlayerCommand extends MessageManager implements Comman
                     if (victim != null) {
                         int victimInstance = ControlManager.getInstanceState(victim);
                         if (victim != player) {
-                            if (!(victim.isOp() || victim.hasPermission("controlplayer.bypass"))) {
+                            if ((boolean) SettingsManager.getSetting(SettingType.SYSTEM_IGNOREBYPASS) || !(victim.isOp() || victim.hasPermission("controlplayer.bypass"))) {
                                 if (!victim.isDead()) {
                                     if (victimInstance != 1) {
                                         ControlState state = ControlManager.createControlInstance(player, victim, true);

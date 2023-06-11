@@ -21,11 +21,11 @@ public class SettingsManager {
 
         for (SettingType settingType : settingTypes) {
             String settingPath = SETTING_PATH + settingType.toString().toLowerCase().replace("_", ".");
-            if(FILE.loadDefault()) setMessageToFile(settingType);
+            if(FILE.loadDefault()) setSettingToFile(settingType);
             Object obj = FILE.get(settingPath);
             if(obj == null) {
                 System.out.println("Resetted '" + settingPath + "' from " + FILE.getFile().getName() + " because the value is null!");
-                setMessageToFile(settingType);
+                setSettingToFile(settingType);
                 obj = FILE.get(settingPath);
             }
             SETTINGS.put(settingType, obj);
@@ -36,14 +36,17 @@ public class SettingsManager {
         return SETTINGS.get(settingType);
     }
 
-    protected static void setMessageToFile(SettingType settingType) {
+    protected static void setSettingToFile(SettingType settingType) {
         String defaultPath = SETTING_PATH + settingType.toString().toLowerCase().replace("_", ".");
+
         switch (settingType) {
-            case APIMODE: FILE.set(defaultPath, false); break;
+            case APIMODE:
+            case SYSTEM_ASYNCCHAT:
+            case SYSTEM_IGNOREBYPASS:
+                FILE.set(defaultPath, false); break;
             case UPDATER_DELAY: FILE.set(defaultPath, 18000); break;
             case CONTROL_RUNNING_SYNCDELAY: FILE.set(defaultPath, 0); break;
-            case CONTROL_RUNNING_FORCECHAT_BYPASSMESSAGE:FILE.set(defaultPath, "-b "); break;
-            case SYSTEM_ASYNCCHAT: FILE.set(defaultPath, false);
+            case CONTROL_RUNNING_FORCECHAT_BYPASSMESSAGE: FILE.set(defaultPath, "-b "); break;
             default: FILE.set(defaultPath, true); break;
         }
         FILE.save();
