@@ -11,8 +11,7 @@ public class ControlPlayerTabCompleter implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> results = new ArrayList<>();
         if(sender.isOp() || sender.hasPermission("controlplayer.use"))
-            Bukkit.getOnlinePlayers().stream().filter(player
-                    -> {
+            Bukkit.getOnlinePlayers().stream().filter(player -> {
                 if(player.getName().equals(sender.getName())) return false;
                 return (boolean) SettingsManager.getSetting(SettingType.SYSTEM_IGNOREBYPASS) || !(player.isOp() || player.hasPermission("controlplayer.bypass"));
             }).forEach(player
