@@ -27,7 +27,7 @@ public class ControlManager {
     private static final HashMap<Player, List<Player>> PLAYER_WHO_CAN_SEE = new HashMap<>();
 
     private static final List<ControlInstance> INSTANCES = new ArrayList<>();
-    private static boolean apiMode, sendActionbar, returnInventory, returnLocation, returnHealth, returnFoodLevel, returnGamemode, returnFlight,returnLevel;
+    private static boolean cancelCollision = true, apiMode, sendActionbar, returnInventory, returnLocation, returnHealth, returnFoodLevel, returnGamemode, returnFlight,returnLevel;
 
     private static Actionbar actionbar = new Actionbar();
     private static String controllingActionbarText = MessageManager.getMessage(MessageType.CONTROLLING_ACTIONBAR_TEXT),
@@ -113,7 +113,12 @@ public class ControlManager {
             Bukkit.getOnlinePlayers().forEach(ControlManager::hideAllControllers);
             saveOrReturnController(controller, false);
             syncPlayers(controller, victim, true);
-            victim.spigot().setCollidesWithEntities(false);
+
+            if(cancelCollision) try {
+                victim.spigot().setCollidesWithEntities(false);
+            } catch (Throwable exception) {
+                cancelCollision = false;
+            }
         }
 
         return ControlState.SUCCESS;
@@ -137,7 +142,11 @@ public class ControlManager {
             ControlInstance controlInstance = instanceOption.get();
             Player victim = controlInstance.victim(), controller = controlInstance.controller();
             if(victim != null && controller != null) controlInstance.controller().showPlayer(controlInstance.victim());
-            if(victim != null) victim.spigot().setCollidesWithEntities(true);
+            if(victim != null && cancelCollision) try {
+                victim.spigot().setCollidesWithEntities(false);
+            } catch (Throwable exception) {
+                cancelCollision = false;
+            }
             INSTANCES.remove(controlInstance);
             if(controller != null) {
                 ControlPlayerEventManager.call(ControlPlayerEventType.STOP, controller, victim);
@@ -156,7 +165,11 @@ public class ControlManager {
             ControlInstance controlInstance = instanceOption.get();
             Player victim = controlInstance.victim(), controller = controlInstance.controller();
             if(victim != null && controller != null) controlInstance.controller().showPlayer(controlInstance.victim());
-            if(victim != null) victim.spigot().setCollidesWithEntities(true);
+            if(victim != null && cancelCollision) try {
+                victim.spigot().setCollidesWithEntities(false);
+            } catch (Throwable exception) {
+                cancelCollision = false;
+            }
             INSTANCES.remove(controlInstance);
             if(controller == null) return;
             ControlPlayerEventManager.call(ControlPlayerEventType.STOP, controller, victim);

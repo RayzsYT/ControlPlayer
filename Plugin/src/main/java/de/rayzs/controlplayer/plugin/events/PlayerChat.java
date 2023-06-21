@@ -31,8 +31,12 @@ public class PlayerChat extends MessageManager implements Listener {
         Object bypassMessageObject = SettingsManager.getSetting(SettingType.CONTROL_RUNNING_FORCECHAT_BYPASSMESSAGE);
         String bypassMessage = bypassMessageObject == null ? "-b " : (String) bypassMessageObject;
 
-        if(!forceChat || instanceState != 0) return;
+        if(instanceState == 1 && (boolean) SettingsManager.getSetting(SettingType.COMTROL_RUNNING_CANCELCHAT)) {
+            event.setCancelled(true);
+            return;
+        }
 
+        if(!forceChat || instanceState != 0) return;
         ControlInstance instance = ControlManager.getControlInstance(player);
         if(message.toLowerCase().startsWith(bypassMessage)) {
             message = message.replace(bypassMessage, "");
@@ -57,8 +61,12 @@ public class PlayerChat extends MessageManager implements Listener {
         Object bypassMessageObject = SettingsManager.getSetting(SettingType.CONTROL_RUNNING_FORCECHAT_BYPASSMESSAGE);
         String bypassMessage = bypassMessageObject == null ? "-b " : (String) bypassMessageObject;
 
-        if(!forceChat || instanceState != 0) return;
+        if(instanceState == 1 && (boolean) SettingsManager.getSetting(SettingType.COMTROL_RUNNING_CANCELCHAT)) {
+            event.setCancelled(true);
+            return;
+        }
 
+        if(!forceChat || instanceState != 0) return;
         ControlInstance instance = ControlManager.getControlInstance(player);
         if(message.toLowerCase().startsWith(bypassMessage)) {
             message = message.replace(bypassMessage, "");
