@@ -29,7 +29,7 @@ public class ControlPlayerPlugin extends JavaPlugin {
             PlayerPickupItem.class, PlayerDropItem.class, InventoryInteraction.class,
             PlayerJoin.class, PlayerQuit.class,
             BlockBreak.class, BlockPlace.class,
-            PlayerChat.class,
+            PlayerChat.class/*, PlayerMove.class*/
     };
 
 
