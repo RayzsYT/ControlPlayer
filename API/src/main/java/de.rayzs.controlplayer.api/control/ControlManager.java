@@ -25,6 +25,7 @@ public class ControlManager {
     private static final HashMap<Player, Location> LAST_LOCATION = new HashMap<>();
     private static final HashMap<Player, GameMode> LAST_GAMEMODE = new HashMap<>();
     private static final HashMap<Player, List<Player>> PLAYER_WHO_CAN_SEE = new HashMap<>();
+    private static final HashMap<String, Long> QUEUE_MESSAGES = new HashMap<>();
 
     private static final List<ControlInstance> INSTANCES = new ArrayList<>();
     private static boolean cancelCollision = true, apiMode, sendActionbar, returnInventory, returnLocation, returnHealth, returnFoodLevel, returnGamemode, returnFlight,returnLevel;
@@ -141,6 +142,9 @@ public class ControlManager {
         if(instanceOption.isPresent()) {
             ControlInstance controlInstance = instanceOption.get();
             Player victim = controlInstance.victim(), controller = controlInstance.controller();
+
+            resetVictimMessages(victim);
+
             if(victim != null && controller != null) controlInstance.controller().showPlayer(controlInstance.victim());
             if(victim != null && cancelCollision) try {
                 victim.spigot().setCollidesWithEntities(false);
@@ -164,6 +168,9 @@ public class ControlManager {
         if(instanceOption.isPresent()) {
             ControlInstance controlInstance = instanceOption.get();
             Player victim = controlInstance.victim(), controller = controlInstance.controller();
+
+            resetVictimMessages(victim);
+
             if(victim != null && controller != null) controlInstance.controller().showPlayer(controlInstance.victim());
             if(victim != null && cancelCollision) try {
                 victim.spigot().setCollidesWithEntities(false);
@@ -209,6 +216,16 @@ public class ControlManager {
             return;
         }
         syncPlayerSources(victim, controller);
+    }
+
+    public static HashMap<String, Long> getQueueMessages() {
+        return QUEUE_MESSAGES;
+    }
+
+    public static void resetVictimMessages(Player victim) {
+        List<String> targetKeys = new ArrayList<>();
+        ControlManager.getQueueMessages().entrySet().stream().filter(entry -> entry.getKey().startsWith(victim.getUniqueId() + "==")).forEach(entry -> targetKeys.add(entry.getKey()));
+        for (String targetKey : targetKeys) QUEUE_MESSAGES.remove(targetKey);
     }
 
     protected static void syncPlayerSources(Player player, Player sourcePlayer) {

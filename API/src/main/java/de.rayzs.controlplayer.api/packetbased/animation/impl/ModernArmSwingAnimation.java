@@ -1,6 +1,7 @@
 package de.rayzs.controlplayer.api.packetbased.animation.impl;
 
 import de.rayzs.controlplayer.api.packetbased.animation.ArmSwing;
+import de.rayzs.controlplayer.api.version.ServerVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -18,9 +19,15 @@ public class ModernArmSwingAnimation implements ArmSwing {
     @Override
     public void execute(Player player) {
         if (disableArmSwing || player == null) return;
-        boolean is117 = versionName.contains("17");
-        String sendPacketMethodeName = is117 ? "sendPacket" : "a",
-                packetClassPath = is117 ? "net.minecraft.network.protocol.game.Packet" : "net.minecraft.network.protocol.Packet";
+        final String sendPacketMethodeName, packetClassPath;
+
+        if(ServerVersion.INSTANCE.getMinor() == 17) {
+            sendPacketMethodeName = "sendPacket";
+            packetClassPath = "net.minecraft.network.protocol.game.Packet";
+        } else {
+            sendPacketMethodeName = "a";
+            packetClassPath = "net.minecraft.network.protocol.Packet";
+        }
 
         try {
             Class<?> entityClass = Class.forName("net.minecraft.world.entity.Entity");
@@ -30,7 +37,7 @@ public class ModernArmSwingAnimation implements ArmSwing {
             Bukkit.getOnlinePlayers().forEach(players -> {
                 try {
                     Object entityPlayer = players.getClass().getMethod("getHandle").invoke(players);
-                    Object playerConnection = entityPlayer.getClass().getField("b").get(entityPlayer);
+                    Object playerConnection = entityPlayer.getClass().getField(ServerVersion.INSTANCE.getMinor() >= 20 ? "c" : "b").get(entityPlayer);
                     playerConnection.getClass().getMethod(sendPacketMethodeName, Class.forName(packetClassPath)).invoke(playerConnection, animationPacket);
                 }catch (Exception exception) { exception.printStackTrace(); }
             });

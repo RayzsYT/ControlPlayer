@@ -4,16 +4,19 @@ import org.bukkit.Server;
 
 public class ServerVersion {
 
+    public static ServerVersion INSTANCE;
+
     private boolean legacy;
     private String rawVersionName;
-    private Version version = Version.MODERN;
+    private Version version;
     int major, minor, release;
 
     public ServerVersion(Server server) {
         rawVersionName = server.getClass().getPackage().getName();
         rawVersionName = rawVersionName.substring(rawVersionName.lastIndexOf('.') + 1);
         version = getVersionEnum(rawVersionName);
-        legacy = version != Version.MODERN && getAges(version)[1] <= 16;
+        legacy = minor <= 16;
+        INSTANCE = this;
     }
 
     public String getRawVersionName() { return rawVersionName; }
@@ -41,9 +44,13 @@ public class ServerVersion {
             versionResult = Version.valueOf(fullVersionName);
         } catch (IllegalArgumentException ignore) {
             try { versionResult = Version.valueOf(primaryVersionName);
-            } catch (IllegalArgumentException exception) { versionResult = Version.MODERN; }
+            } catch (IllegalArgumentException exception) { versionResult = Version.UNKNOWN; }
         }
         return versionResult;
+    }
+
+    public int getMinor() {
+        return minor;
     }
 
     public int[] getAges(String versionName) {
@@ -69,26 +76,22 @@ public class ServerVersion {
     }
 
     public enum Version {
-        v_1_8,
-        v_1_8_9,
-        v_1_9,
-        v_1_9_4,
-        v_1_10,
-        v_1_10_2,
-        v_1_11,
-        v_1_11_2,
-        v_1_12,
-        v_1_12_2,
-        v_1_13,
-        v_1_13_2,
-        v_1_14,
-        v_1_14_4,
-        v_1_15,
-        v_1_15_2,
-        v_1_16,
-        v_1_16_4,
-        v_1_16_5,
-        MODERN;
+        v_1_8, v_1_8_8,
+        v_1_9, v_1_9_4,
+        v_1_10, v_1_10_2,
+        v_1_11, v_1_11_2,
+        v_1_12, v_1_12_2,
+        v_1_13, v_1_13_2,
+        v_1_14, v_1_14_4,
+        v_1_15, v_1_15_2,
+        v_1_16, v_1_16_4, v_1_16_5,
+        v_1_17, v_1_17_1,
+        v_1_18, v_1_18_1, v_1_18_2,
+        v_1_19, v_1_19_1, v_1_19_2, v_1_19_3,
+        v_1_20, v_1_20_1, v_1_20_2, v_1_20_3, v_1_20_4,
+        v_1_21, v_1_21_1, v_1_21_2,
+        UNKNOWN;
+        /*
         // minecraft server protocols
         // https://minecraft.fandom.com/wiki/Protocol_version
         public static int getProtocol(Version version) {
@@ -132,5 +135,6 @@ public class ServerVersion {
                     return 755;
             }
         }
+        */
     }
 }

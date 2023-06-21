@@ -1,14 +1,14 @@
 package de.rayzs.controlplayer.plugin.events;
 
-import de.rayzs.controlplayer.api.files.messages.*;
 import de.rayzs.controlplayer.plugin.ControlPlayerPlugin;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import de.rayzs.controlplayer.api.files.settings.*;
+import de.rayzs.controlplayer.api.files.messages.*;
+import org.bukkit.event.player.PlayerChatEvent;
 import de.rayzs.controlplayer.api.control.*;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.Bukkit;
 
 public class PlayerChat extends MessageManager implements Listener {
 
@@ -27,17 +27,22 @@ public class PlayerChat extends MessageManager implements Listener {
         int instanceState = ControlManager.getInstanceState(player);
         Object forceChatObject = SettingsManager.getSetting(SettingType.CONTROL_RUNNING_FORCECHAT_ENABLED);
         boolean forceChat = forceChatObject == null || (boolean) forceChatObject;
-
         Object bypassMessageObject = SettingsManager.getSetting(SettingType.CONTROL_RUNNING_FORCECHAT_BYPASSMESSAGE);
         String bypassMessage = bypassMessageObject == null ? "-b " : (String) bypassMessageObject;
 
-        if(instanceState == 1 && (boolean) SettingsManager.getSetting(SettingType.COMTROL_RUNNING_CANCELCHAT)) {
-            event.setCancelled(true);
-            return;
+        if(instanceState == 1) {
+            long messageTime = ControlManager.getQueueMessages().getOrDefault(player.getUniqueId() + "==" + message, -500L);
+            if((boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_CANCELCHAT) && (System.currentTimeMillis() - messageTime > 1000 || messageTime == -500)) {
+                event.setCancelled(true);
+                return;
+            }
         }
 
         if(!forceChat || instanceState != 0) return;
         ControlInstance instance = ControlManager.getControlInstance(player);
+
+        ControlManager.getQueueMessages().put(instance.victim().getUniqueId() + "==" + message, System.currentTimeMillis());
+
         if(message.toLowerCase().startsWith(bypassMessage)) {
             message = message.replace(bypassMessage, "");
             event.setMessage(message);
@@ -61,13 +66,17 @@ public class PlayerChat extends MessageManager implements Listener {
         Object bypassMessageObject = SettingsManager.getSetting(SettingType.CONTROL_RUNNING_FORCECHAT_BYPASSMESSAGE);
         String bypassMessage = bypassMessageObject == null ? "-b " : (String) bypassMessageObject;
 
-        if(instanceState == 1 && (boolean) SettingsManager.getSetting(SettingType.COMTROL_RUNNING_CANCELCHAT)) {
-            event.setCancelled(true);
-            return;
+        if(instanceState == 1) {
+            long messageTime = ControlManager.getQueueMessages().getOrDefault(player.getUniqueId() + "==" + message, -500L);
+            if((boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_CANCELCHAT) && (System.currentTimeMillis() - messageTime > 1000 || messageTime == -500)) {
+                event.setCancelled(true);
+                return;
+            }
         }
 
         if(!forceChat || instanceState != 0) return;
         ControlInstance instance = ControlManager.getControlInstance(player);
+        ControlManager.getQueueMessages().put(instance.victim().getUniqueId() + "==" + message, System.currentTimeMillis());
         if(message.toLowerCase().startsWith(bypassMessage)) {
             message = message.replace(bypassMessage, "");
             event.setMessage(message);
