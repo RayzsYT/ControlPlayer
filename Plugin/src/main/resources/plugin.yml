@@ -1,5 +1,5 @@
 name: ControlPlayer
-version: 2.4.0
+version: 2.4.1
 main: de.rayzs.controlplayer.plugin.ControlPlayerPlugin
 author: Rayzs_YT
 api-version: 1.13
@@ -16,3 +16,7 @@ commands:
   controlplayerreload:
     aliases: [cpr, controlplayerr, cpreload]
     description: Reload all files
+
+  controlplayerfix:
+    aliases: [cpf, controlplayerf, cpfix]
+    description: Fix players or yourself

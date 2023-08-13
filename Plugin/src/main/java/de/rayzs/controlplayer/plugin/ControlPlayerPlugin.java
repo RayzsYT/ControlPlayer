@@ -20,7 +20,8 @@ public class ControlPlayerPlugin extends JavaPlugin {
     private final WebConnection web = new WebConnection();
     private final String[] mainCommandNames = {"cp", "controlplayer", "cplayer", "controlp"},
             subCommandNames = {"scp", "silentcontrolplayer", "scontrolplayer", "scplayer"},
-            reloadCommandNames = {"controlplayerreload", "controlplayerr", "cpr", "cpreload"};
+            reloadCommandNames = {"controlplayerreload", "controlplayerr", "cpr", "cpreload"},
+            fixCommandNames = {"controlplayerfix", "controlplayerf", "cpf", "cpfix"};
 
     private final Class<?>[] listenerClasses = {
             PlayerChangeWorld.class, PlayerDeath.class, PlayerInteract.class, PlayerInteractAtEntity.class, PlayerAnimation.class,
@@ -71,6 +72,7 @@ public class ControlPlayerPlugin extends JavaPlugin {
         ControlPlayerCommand mainCommandClass = new ControlPlayerCommand();
         SilentControlPlayerCommand subCommandClass = new SilentControlPlayerCommand();
         ControlPlayerReloadCommand reloadCommandClass = new ControlPlayerReloadCommand();
+        ControlPlayerFixCommand fixCommandClass = new ControlPlayerFixCommand();
         ControlPlayerTabCompleter tabCompleterClass = new ControlPlayerTabCompleter();
 
         for (String commandName : mainCommandNames) {
@@ -88,6 +90,11 @@ public class ControlPlayerPlugin extends JavaPlugin {
         for (String commandName : reloadCommandNames) {
             PluginCommand command = getCommand(commandName);
             command.setExecutor(reloadCommandClass);
+        }
+
+        for (String commandName : fixCommandNames) {
+            PluginCommand command = getCommand(commandName);
+            command.setExecutor(fixCommandClass);
         }
     }
 

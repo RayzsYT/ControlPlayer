@@ -18,7 +18,7 @@ public class ControlManager {
 
     private static final HashMap<ControlInstance, ControlSwap> SWAPPED_INSTANCES = new HashMap<>();
     private static final HashMap<Player, Integer> LAST_FOODLEVEL = new HashMap<>(), LAST_LEVEL = new HashMap<>(), LAST_TOTALEXCPERIENCE = new HashMap<>();
-    private static final HashMap<Player, Boolean> LAST_ALLOWED_FLIGHT = new HashMap<>(), LAST_FLYING = new HashMap<>();
+    private static final HashMap<Player, Boolean> LAST_ALLOWED_FLIGHT = new HashMap<>(), LAST_FLYING = new HashMap<>(), LAST_COLLISION = new HashMap<>();
     private static final HashMap<Player, ItemStack[]> LAST_INVENTORY = new HashMap<>(), LAST_ARMOR = new HashMap<>();
     private static final HashMap<Player, Double> LAST_HEALTH = new HashMap<>(), LAST_HEALTHSCALE = new HashMap<>();
     private static final HashMap<Player, Float> LAST_EXP = new HashMap<>(), LAST_EXHAUSTION = new HashMap<>();
@@ -147,7 +147,7 @@ public class ControlManager {
 
             if(victim != null && controller != null) controlInstance.controller().showPlayer(controlInstance.victim());
             if(victim != null && cancelCollision) try {
-                victim.spigot().setCollidesWithEntities(false);
+                victim.spigot().setCollidesWithEntities(LAST_COLLISION.get(player));
             } catch (Throwable exception) {
                 cancelCollision = false;
             }
@@ -173,7 +173,7 @@ public class ControlManager {
 
             if(victim != null && controller != null) controlInstance.controller().showPlayer(controlInstance.victim());
             if(victim != null && cancelCollision) try {
-                victim.spigot().setCollidesWithEntities(false);
+                victim.spigot().setCollidesWithEntities(LAST_COLLISION.get(player));
             } catch (Throwable exception) {
                 cancelCollision = false;
             }
@@ -206,6 +206,13 @@ public class ControlManager {
             } else return false;
         }).findFirst();
         return (instanceOption.isPresent() && isOwner.get()) ? 0 : instanceOption.isPresent() && !isOwner.get() ? 1 : getControlInstance(player) != null && !isOwner.get() ? 1 : -1;
+    }
+
+    public static void fixPlayer(Player player) {
+        if(cancelCollision) try {
+            player.spigot().setCollidesWithEntities(true);
+            LAST_COLLISION.put(player, true);
+        } catch (Throwable exception) { cancelCollision = false; }
     }
 
     protected static void syncPlayers(Player controller, Player victim, boolean start) {
@@ -270,6 +277,9 @@ public class ControlManager {
             PLAYER_WHO_CAN_SEE.get(player).stream().filter(OfflinePlayer::isOnline).forEach(players -> players.showPlayer(player));
             PLAYER_WHO_CAN_SEE.remove(player);
         } else {
+            if(cancelCollision) try {
+                LAST_COLLISION.put(player, player.spigot().getCollidesWithEntities());
+            } catch (Throwable exception) { cancelCollision = false; }
             if (returnInventory) {
                 LAST_INVENTORY.put(player, player.getInventory().getContents());
                 LAST_ARMOR.put(player, player.getInventory().getArmorContents());
