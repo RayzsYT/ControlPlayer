@@ -1,13 +1,20 @@
 package de.rayzs.controlplayer.plugin.events;
 
+import de.rayzs.controlplayer.api.version.ServerVersion;
+import de.rayzs.controlplayer.plugin.ControlPlayerPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import de.rayzs.controlplayer.api.control.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.util.Vector;
 import java.lang.reflect.Field;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class EntityDamageByEntity implements Listener {
@@ -27,15 +34,8 @@ public class EntityDamageByEntity implements Listener {
 
             if (instanceState == 0) {
                 if (instance.victim() == player) return;
+
                 Player victim = instance.victim();
-                try {
-                    Class<?> clazz = event.getClass();
-                    Field field = clazz.getDeclaredField("damager");
-                    field.setAccessible(true);
-                    field.set(event, victim);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
                 if (event.getEntity() instanceof Player) {
                     player = (Player) event.getEntity();
                     if ((player.getHealth() - event.getDamage()) < 0.5) {
@@ -48,17 +48,21 @@ public class EntityDamageByEntity implements Listener {
 
         if (event.getEntity() instanceof Player) {
             player = (Player) event.getEntity();
+
             instanceState = ControlManager.getInstanceState(player);
             if (instanceState == 1) {
                 ControlInstance controlInstance = ControlManager.getControlInstance(player);
                 Player controller = controlInstance.controller();
                 event.setCancelled(false);
 
-                double healthAfterDamage = (player.getHealth() - event.getDamage());
                 if (!event.isCancelled()) pushPlayer(controller, event.getDamager());
 
-                if (healthAfterDamage < 0.5) return;
-                controller.setHealth(healthAfterDamage);
+                Player finalPlayer = player;
+                Bukkit.getScheduler().scheduleSyncDelayedTask(ControlPlayerPlugin.getInstance(), () -> {
+                    if(finalPlayer.getHealth() < 0.5) return;
+                    controller.setHealth(finalPlayer.getHealth());
+                });
+
             } else if (instanceState == 0) {
                 ControlInstance controlInstance = ControlManager.getControlInstance(player);
                 if (!event.isCancelled()) {

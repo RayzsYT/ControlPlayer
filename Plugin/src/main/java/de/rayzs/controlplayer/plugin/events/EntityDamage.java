@@ -5,7 +5,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 
-public class EntityDamage implements Listener {
+import java.util.Random;
+
+ public class EntityDamage implements Listener {
 
     @EventHandler (priority = EventPriority.LOWEST)
     public void onEntityDamage(EntityDamageEvent event) {
@@ -14,7 +16,7 @@ public class EntityDamage implements Listener {
             int instanceState = ControlManager.getInstanceState(player);
             if (instanceState != 0) return;
 
-            if(event.isCancelled()) return;
+            if(event.isCancelled() || event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) return;
 
             double healthAfterDamage = (player.getHealth() - event.getDamage());
             ControlInstance controlInstance = ControlManager.getControlInstance(player);
