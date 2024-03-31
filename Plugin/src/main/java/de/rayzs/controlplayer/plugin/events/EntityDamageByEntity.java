@@ -1,20 +1,14 @@
 package de.rayzs.controlplayer.plugin.events;
 
-import de.rayzs.controlplayer.api.version.ServerVersion;
 import de.rayzs.controlplayer.plugin.ControlPlayerPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import de.rayzs.controlplayer.api.control.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.util.Vector;
-import java.lang.reflect.Field;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class EntityDamageByEntity implements Listener {
