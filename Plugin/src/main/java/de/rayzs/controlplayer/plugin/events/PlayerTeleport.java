@@ -24,20 +24,26 @@ public class PlayerTeleport implements Listener {
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Player victim = event.getPlayer();
         ControlInstance instance = ControlManager.getControlInstance(victim);
+
         if(instance == null || event.getTo() == null) return;
 
-        Location toLoc = event.getTo();
+        Location toLoc = event.getTo(), fromLoc = event.getFrom();
         ControlSwap swap = ControlManager.getControlSwap(instance);
         int instanceState = ControlManager.getInstanceState(victim);
         boolean useSwap = swap.isEnabled() && swap.isSwapped();
         if(event.getTo() == null || useSwap || instanceState == 0) return;
 
         if(!Arrays.asList(PlayerTeleportEvent.TeleportCause.COMMAND, PlayerTeleportEvent.TeleportCause.PLUGIN).contains(event.getCause())) return;
+        Player controller = instance.controller();
+
         if(event.getCause() == PlayerTeleportEvent.TeleportCause.PLUGIN) {
-            Player controller = instance.controller();
-            if(toLoc.distance(controller.getLocation()) < 3) return;
+            if(fromLoc.distance(toLoc) < 5) return;
             controller.teleport(victim.getLocation());
             event.setCancelled(true);
+            return;
         }
+
+        controller.teleport(victim.getLocation());
+        event.setCancelled(true);
     }
 }
