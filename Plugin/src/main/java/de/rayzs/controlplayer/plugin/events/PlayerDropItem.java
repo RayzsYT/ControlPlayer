@@ -19,5 +19,6 @@ public class PlayerDropItem implements Listener {
         int instanceState = ControlManager.getInstanceState(player);
         boolean useSwap = swap.isEnabled() && swap.isSwapped();
         if (useSwap && instanceState == 0 || !useSwap && instanceState == 1) event.setCancelled(true);
+        if(!useSwap && instanceState == 0 && !ControlManager.canDrop()) event.setCancelled(true);
     }
 }
