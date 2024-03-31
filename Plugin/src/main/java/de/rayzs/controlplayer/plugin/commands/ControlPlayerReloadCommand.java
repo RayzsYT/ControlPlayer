@@ -1,5 +1,6 @@
 package de.rayzs.controlplayer.plugin.commands;
 
+import de.rayzs.controlplayer.api.control.ControlManager;
 import de.rayzs.controlplayer.api.files.messages.*;
 import de.rayzs.controlplayer.api.files.settings.SettingsManager;
 import org.bukkit.command.Command;
