@@ -20,7 +20,7 @@ public class PlayerCommandPreProcess implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerPreprocessCommand(PlayerCommandPreprocessEvent event) {
-        if(event.isCancelled() || !(boolean) SettingsManager.getSetting(SettingType.CANCELCOMMANDS)) return;
+        if(event.isCancelled() || !(boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_CANCELCOMMANDS)) return;
 
         Player player = event.getPlayer();
         int instanceState = ControlManager.getInstanceState(player);

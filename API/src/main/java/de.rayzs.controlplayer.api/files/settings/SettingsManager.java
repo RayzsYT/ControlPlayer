@@ -43,7 +43,7 @@ public class SettingsManager {
             case APIMODE:
             case SYSTEM_ASYNCCHAT:
             case SYSTEM_IGNOREBYPASS:
-            case CONTROL_RUNNING_CANCELCHAT:
+            case CONTROL_RUNNING_CANCELCHAT: case CONTROL_RUNNING_CANCELCOMMANDS:
                 FILE.set(defaultPath, false); break;
             case UPDATER_DELAY: FILE.set(defaultPath, 18000); break;
             case CONTROL_RUNNING_SYNCDELAY: FILE.set(defaultPath, 0); break;
