@@ -10,11 +10,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-public class PlayerPreprocessCommand implements Listener {
+public class PlayerCommandPreProcess implements Listener {
 
     private final ControlPlayerPlugin instance;
 
-    public PlayerPreprocessCommand() {
+    public PlayerCommandPreProcess() {
         this.instance = ControlPlayerPlugin.getInstance();
     }
 
