@@ -53,6 +53,10 @@ public class ServerVersion {
         return minor;
     }
 
+    public int getRelease() {
+        return release;
+    }
+
     public int[] getAges(String versionName) {
         String[] versionArgs = versionName.replace("v", "").replace("R", "").split("_");
         try {
