@@ -3,6 +3,8 @@ package de.rayzs.controlplayer.plugin.events;
 import de.rayzs.controlplayer.api.control.ControlInstance;
 import de.rayzs.controlplayer.api.control.ControlManager;
 import de.rayzs.controlplayer.api.control.ControlSwap;
+import de.rayzs.controlplayer.api.files.settings.SettingType;
+import de.rayzs.controlplayer.api.files.settings.SettingsManager;
 import de.rayzs.controlplayer.plugin.ControlPlayerPlugin;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -22,6 +24,8 @@ public class PlayerTeleport implements Listener {
 
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
+        if(!(boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_SYNCTELEPORT)) return;
+
         Player victim = event.getPlayer();
         ControlInstance instance = ControlManager.getControlInstance(victim);
 
