@@ -34,6 +34,11 @@ public class PlayerChat extends MessageManager implements Listener {
             long messageTime = ControlManager.getQueueMessages().getOrDefault(player.getUniqueId() + "==" + message, -500L);
             if((boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_CANCELCHAT) && (System.currentTimeMillis() - messageTime > 1000 || messageTime == -500)) {
                 event.setCancelled(true);
+                ControlManager.getControlInstance(player)
+                        .controller()
+                        .sendMessage(MessageManager.getMessage(MessageType.SPY_CHAT_MESSAGE)
+                                .replace("%player%", player.getName())
+                                .replace("%message%", message));
                 return;
             }
         }
@@ -70,6 +75,11 @@ public class PlayerChat extends MessageManager implements Listener {
             long messageTime = ControlManager.getQueueMessages().getOrDefault(player.getUniqueId() + "==" + message, -500L);
             if((boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_CANCELCHAT) && (System.currentTimeMillis() - messageTime > 1000 || messageTime == -500)) {
                 event.setCancelled(true);
+                ControlManager.getControlInstance(player)
+                        .controller()
+                        .sendMessage(MessageManager.getMessage(MessageType.SPY_CHAT_MESSAGE)
+                                .replace("%player%", player.getName())
+                                .replace("%message%", message));
                 return;
             }
         }

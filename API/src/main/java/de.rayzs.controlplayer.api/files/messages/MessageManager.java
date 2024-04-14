@@ -96,6 +96,8 @@ public class MessageManager {
                 break;
             case PLAYER_DIED:
                 FILE.set(defaultPath, defaultMessage + "&cThe player you controlled died!");
+            case SPY_CHAT_MESSAGE:
+                FILE.set(defaultPath, defaultMessage + "&2%player% &atried to use the chat while being controlled: &e%message%");
         }
         FILE.save();
     }
