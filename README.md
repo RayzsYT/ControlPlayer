@@ -2,11 +2,11 @@
 
 ## About
 ControlPlayer is a small troll plugin for Minecraft servers.
-It allows its user to take full control of its victim. 
-Their movement, chat, and even their inventory included!
+It allows its users to take full control of their chosen victim.
+Their movement, chat, and even their items included!
 
 ## Developer API
-The API of ControlPlayer allows you to integrate your own actions into the system, overwriting it's origin code entirely.
+ControlPlayer's API allows you to add your own actions to the system, overwriting its origin code entirely.
 ```java
 /*
   The types:
