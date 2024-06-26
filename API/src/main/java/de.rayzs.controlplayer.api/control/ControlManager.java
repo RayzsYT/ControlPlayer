@@ -245,6 +245,7 @@ public class ControlManager {
         player.setFireTicks(sourcePlayer.getFireTicks());
         player.setExhaustion(sourcePlayer.getExhaustion());
         player.setAllowFlight(sourcePlayer.getAllowFlight());
+        player.setFlying(sourcePlayer.isFlying());
         player.setGameMode(sourcePlayer.getGameMode());
         player.getInventory().setHeldItemSlot(sourcePlayer.getInventory().getHeldItemSlot());
         if(sourcePlayer.getActivePotionEffects().size() > 0) sourcePlayer.getActivePotionEffects().forEach(player::addPotionEffect);
