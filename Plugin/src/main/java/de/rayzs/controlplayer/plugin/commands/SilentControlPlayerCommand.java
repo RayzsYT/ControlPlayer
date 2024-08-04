@@ -12,20 +12,27 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class SilentControlPlayerCommand extends MessageManager implements CommandExecutor {
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class SilentControlPlayerCommand extends Command {
+
+    public SilentControlPlayerCommand(String name, String description, String usageMessage, List<String> aliases) {
+        super(name, description, usageMessage, aliases);
+    }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
+    public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         boolean sendHelp = true;
 
         if(!(sender instanceof Player)) {
-            sender.sendMessage(getMessage(MessageType.ONLY_PLAYERS));
+            sender.sendMessage(MessageManager.getMessage(MessageType.ONLY_PLAYERS));
             return true;
         }
 
         if(!(sender.isOp() || sender.hasPermission("controlplayer.silent.use"))) {
-            sender.sendMessage(getMessage(MessageType.NO_PERMISSION));
+            sender.sendMessage(MessageManager.getMessage(MessageType.NO_PERMISSION));
             return true;
         }
 
@@ -34,10 +41,10 @@ public class SilentControlPlayerCommand extends MessageManager implements Comman
 
         switch (playerInstance) {
             case 0:
-                sender.sendMessage(ControlManager.deleteControlInstance(player) ? getMessage(MessageType.STOPPED_CONTROLLING) : getMessage(MessageType.ERROR));
+                sender.sendMessage(ControlManager.deleteControlInstance(player) ? MessageManager.getMessage(MessageType.STOPPED_CONTROLLING) : MessageManager.getMessage(MessageType.ERROR));
                 return true;
             case 1: default:
-                sender.sendMessage(getMessage(MessageType.BEING_CONTROLLED));
+                sender.sendMessage(MessageManager.getMessage(MessageType.BEING_CONTROLLED));
                 return true;
             case -1:
                 if(args.length == 1) {
@@ -51,18 +58,23 @@ public class SilentControlPlayerCommand extends MessageManager implements Comman
                                     if (victimInstance != 1) {
                                         ControlState state = ControlManager.createControlInstance(player, victim, true);
                                         if (state == ControlState.SUCCESS)
-                                            sender.sendMessage(getMessage(MessageType.SILENT_SUCCESS).replace("%player%", victim.getName()));
-                                        else sender.sendMessage(getMessage(MessageType.ERROR));
-                                    } else sender.sendMessage(getMessage(MessageType.ALREADY_CONTROLLED));
-                                } else sender.sendMessage(getMessage(MessageType.NOT_ALIVE));
-                            } else sender.sendMessage(getMessage(MessageType.PLAYER_IMUN));
-                        } else sender.sendMessage(getMessage(MessageType.SELF_CONTROL));
-                    } else sender.sendMessage(getMessage(MessageType.NOT_ONLINE));
+                                            sender.sendMessage(MessageManager.getMessage(MessageType.SILENT_SUCCESS).replace("%player%", victim.getName()));
+                                        else sender.sendMessage(MessageManager.getMessage(MessageType.ERROR));
+                                    } else sender.sendMessage(MessageManager.getMessage(MessageType.ALREADY_CONTROLLED));
+                                } else sender.sendMessage(MessageManager.getMessage(MessageType.NOT_ALIVE));
+                            } else sender.sendMessage(MessageManager.getMessage(MessageType.PLAYER_IMUN));
+                        } else sender.sendMessage(MessageManager.getMessage(MessageType.SELF_CONTROL));
+                    } else sender.sendMessage(MessageManager.getMessage(MessageType.NOT_ONLINE));
                     break;
                 }
         }
 
-        if(sendHelp) sender.sendMessage(getMessage(MessageType.SILENT_USAGE));
+        if(sendHelp) sender.sendMessage(MessageManager.getMessage(MessageType.SILENT_USAGE));
         return true;
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
+        return ControlPlayerTabCompleter.getTabCompletion(sender);
     }
 }
