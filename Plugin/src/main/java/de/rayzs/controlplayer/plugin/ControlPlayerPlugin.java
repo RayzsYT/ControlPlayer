@@ -19,7 +19,7 @@ public class ControlPlayerPlugin extends JavaPlugin {
     private int updaterTaskId;
     private final WebConnection web = new WebConnection();
     private final String[] mainCommandNames = {"cp", "controlplayer", "cplayer", "controlp"},
-            subCommandNames = {"scp", "silentcontrolplayer", "scontrolplayer", "scplayer"},
+            silentControlCommandNames = {"scp", "silentcontrolplayer", "scontrolplayer", "scplayer"},
             reloadCommandNames = {"controlplayerreload", "controlplayerr", "cpr", "cpreload"},
             fixCommandNames = {"controlplayerfix", "controlplayerf", "cpf", "cpfix"};
 
@@ -70,7 +70,7 @@ public class ControlPlayerPlugin extends JavaPlugin {
 
     protected void registerCommands() {
         ControlPlayerCommand mainCommandClass = new ControlPlayerCommand();
-        SilentControlPlayerCommand subCommandClass = new SilentControlPlayerCommand();
+        SilentControlPlayerCommand silentControlCommandClass = new SilentControlPlayerCommand();
         ControlPlayerReloadCommand reloadCommandClass = new ControlPlayerReloadCommand();
         ControlPlayerFixCommand fixCommandClass = new ControlPlayerFixCommand();
         ControlPlayerTabCompleter tabCompleterClass = new ControlPlayerTabCompleter();
@@ -81,9 +81,9 @@ public class ControlPlayerPlugin extends JavaPlugin {
             command.setTabCompleter(tabCompleterClass);
         }
 
-        for (String commandName : subCommandNames) {
+        for (String commandName : silentControlCommandNames) {
             PluginCommand command = getCommand(commandName);
-            command.setExecutor(subCommandClass);
+            command.setExecutor(silentControlCommandClass);
             command.setTabCompleter(tabCompleterClass);
         }
 
