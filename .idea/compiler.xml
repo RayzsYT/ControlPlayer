@@ -11,9 +11,6 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="API" target="8" />
-      <module name="ControlPlayer" target="8" />
-      <module name="Plugin" target="8" />
       <module name="Test" target="8" />
     </bytecodeTargetLevel>
   </component>
