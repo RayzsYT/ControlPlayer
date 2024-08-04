@@ -6,9 +6,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import java.util.*;
 
-public class ControlPlayerTabCompleter implements TabCompleter {
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+public class ControlPlayerTabCompleter {
+
+    public static List<String> getTabCompletion(CommandSender sender) {
         List<String> results = new ArrayList<>();
         if(sender.isOp() || sender.hasPermission("controlplayer.use"))
             Bukkit.getOnlinePlayers().stream().filter(player -> {
