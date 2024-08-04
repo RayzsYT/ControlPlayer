@@ -269,8 +269,8 @@ public class ControlManager {
                 player.setTotalExperience(LAST_TOTALEXCPERIENCE.get(player));
             }
             if (returnHealth) {
-                player.setHealth(LAST_HEALTH.get(player));
                 player.setHealthScale(LAST_HEALTHSCALE.get(player));
+                player.setHealth(LAST_HEALTH.get(player));
             }
             if (returnLocation) player.teleport(LAST_LOCATION.get(player));
             if (returnFoodLevel) player.setFoodLevel(LAST_FOODLEVEL.get(player));
@@ -296,8 +296,8 @@ public class ControlManager {
                 LAST_TOTALEXCPERIENCE.put(player, player.getTotalExperience());
             }
             if (returnHealth) {
-                LAST_HEALTH.put(player, player.getHealth());
                 LAST_HEALTHSCALE.put(player, player.getHealthScale());
+                LAST_HEALTH.put(player, player.getHealth());
             }
             if (returnLocation) LAST_LOCATION.put(player, player.getLocation());
             if (returnFoodLevel) LAST_FOODLEVEL.put(player, player.getFoodLevel());
