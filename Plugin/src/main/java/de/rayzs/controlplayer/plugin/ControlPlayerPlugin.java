@@ -5,14 +5,16 @@ import de.rayzs.controlplayer.api.files.settings.*;
 import de.rayzs.controlplayer.plugin.bstats.Metrics;
 import de.rayzs.controlplayer.api.web.WebConnection;
 import de.rayzs.controlplayer.plugin.events.*;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.command.TabExecutor;
+import org.bukkit.Server;
+import org.bukkit.command.*;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.Bukkit;
 import de.rayzs.controlplayer.plugin.commands.*;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ControlPlayerPlugin extends JavaPlugin {
 
@@ -21,10 +23,9 @@ public class ControlPlayerPlugin extends JavaPlugin {
     private boolean latestVersion = true;
     private int updaterTaskId;
     private final WebConnection web = new WebConnection();
-    private final String[] mainCommandNames = {"cp", "controlplayer", "cplayer", "controlp"},
-            silentControlCommandNames = {"scp", "silentcontrolplayer", "scontrolplayer", "scplayer"},
-            reloadCommandNames = {"controlplayerreload", "controlplayerr", "cpr", "cpreload"},
-            fixCommandNames = {"controlplayerfix", "controlplayerf", "cpf", "cpfix"};
+
+    private static final List<Command> registeredCommands = new ArrayList<>();
+    private static CommandMap commandMap = null;
 
     private final Class<?>[] listenerClasses = {
             PlayerChangeWorld.class, PlayerDeath.class, PlayerInteract.class, PlayerInteractAtEntity.class, PlayerAnimation.class,
@@ -41,6 +42,9 @@ public class ControlPlayerPlugin extends JavaPlugin {
     public void onEnable() {
         instance = this;
         ControlManager.load(this);
+
+        accessSimpleCommandMap();
+
         startUpdaterTask();
         registerCommands();
         registerEvents();
@@ -48,7 +52,9 @@ public class ControlPlayerPlugin extends JavaPlugin {
     }
 
     @Override
-    public void onDisable() { }
+    public void onDisable() {
+        unregisterCommands();
+    }
 
     public static ControlPlayerPlugin getInstance() {
         return instance;
@@ -56,6 +62,18 @@ public class ControlPlayerPlugin extends JavaPlugin {
 
     public boolean isLatestVersion() {
         return latestVersion;
+    }
+
+    public static void registerCommands() {
+        registerCommand(new ControlPlayerCommand("controlplayer", "Take full control over a player", "/controlplayer <player>", (ArrayList<String>) SettingsManager.getSetting(SettingType.COMMANDALIASES_CONTROL)));
+        registerCommand(new SilentControlPlayerCommand("silentcontrolplayer", "Activate the toggle-mode to control a player", "/silentcontrolmode <player>", (ArrayList<String>) SettingsManager.getSetting(SettingType.COMMANDALIASES_SILENTCONTROL)));
+        registerCommand(new ControlPlayerReloadCommand("controlplayerreload", "Reload all files", "/controlplayerreload", (ArrayList<String>) SettingsManager.getSetting(SettingType.COMMANDALIASES_RELOAD)));
+        registerCommand(new ControlPlayerFixCommand("controlplayerfix", "Fix players or yourself", "/controlplayerfix <optional: player>", (ArrayList<String>) SettingsManager.getSetting(SettingType.COMMANDALIASES_FIX)));
+    }
+
+    public static void unregisterCommands() {
+        if(commandMap == null) return;
+        for (Command command : registeredCommands) command.unregister(commandMap);
     }
 
     protected void registerEvents() {
@@ -71,21 +89,19 @@ public class ControlPlayerPlugin extends JavaPlugin {
         }
     }
 
-    protected void registerCommands() {
-        ControlPlayerTabCompleter tabCompleter = new ControlPlayerTabCompleter();
-
-        registerCommand(new ControlPlayerCommand(), tabCompleter, mainCommandNames);
-        registerCommand(new SilentControlPlayerCommand(), tabCompleter, silentControlCommandNames);
-        registerCommand(new ControlPlayerReloadCommand(), null, reloadCommandNames);
-        registerCommand(new ControlPlayerFixCommand(), null, fixCommandNames);
+    protected static void registerCommand(Command command) {
+        registeredCommands.add(command);
+        commandMap.register(command.getName(), command);
     }
 
-    protected void registerCommand(CommandExecutor commandExecutor, TabCompleter tabCompleter, String... commands) {
-        PluginCommand pluginCommand;
-        for (String command : commands) {
-            pluginCommand = getCommand(command);
-            pluginCommand.setExecutor(commandExecutor);
-            if(tabCompleter != null) pluginCommand.setTabCompleter(tabCompleter);
+    protected void accessSimpleCommandMap() {
+        try {
+            final Class<? extends Server> clazz = Bukkit.getServer().getClass();
+            final Field field = clazz.getDeclaredField("commandMap");
+            field.setAccessible(true);
+            commandMap = (CommandMap) field.get(Bukkit.getServer());
+        } catch (Throwable throwable) {
+            getLogger().warning("Could not access CommandMap!");
         }
     }
 
