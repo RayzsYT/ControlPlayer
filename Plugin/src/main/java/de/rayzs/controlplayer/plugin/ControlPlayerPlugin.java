@@ -28,7 +28,7 @@ public class ControlPlayerPlugin extends JavaPlugin {
             EntityDamage.class, EntityDamageByEntity.class, EntityTargetLivingEntity.class,
             PlayerToggleFlight.class, PlayerToggleSneak.class, PlayerToggleSprint.class,
             PlayerPickupItem.class, PlayerDropItem.class, InventoryInteraction.class,
-            PlayerJoin.class, PlayerQuit.class, PlayerKick.class,
+            PlayerJoin.class, PlayerQuit.class,
             BlockBreak.class, BlockPlace.class,
             PlayerChat.class, PlayerCommandPreProcess.class, PlayerTeleport.class/*, PlayerMove.class*/
     };
