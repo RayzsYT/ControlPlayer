@@ -5,6 +5,9 @@ import de.rayzs.controlplayer.api.files.settings.*;
 import de.rayzs.controlplayer.plugin.bstats.Metrics;
 import de.rayzs.controlplayer.api.web.WebConnection;
 import de.rayzs.controlplayer.plugin.events.*;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
@@ -69,32 +72,20 @@ public class ControlPlayerPlugin extends JavaPlugin {
     }
 
     protected void registerCommands() {
-        ControlPlayerCommand mainCommandClass = new ControlPlayerCommand();
-        SilentControlPlayerCommand silentControlCommandClass = new SilentControlPlayerCommand();
-        ControlPlayerReloadCommand reloadCommandClass = new ControlPlayerReloadCommand();
-        ControlPlayerFixCommand fixCommandClass = new ControlPlayerFixCommand();
-        ControlPlayerTabCompleter tabCompleterClass = new ControlPlayerTabCompleter();
+        ControlPlayerTabCompleter tabCompleter = new ControlPlayerTabCompleter();
 
-        for (String commandName : mainCommandNames) {
-            PluginCommand command = getCommand(commandName);
-            command.setExecutor(mainCommandClass);
-            command.setTabCompleter(tabCompleterClass);
-        }
+        registerCommand(new ControlPlayerCommand(), tabCompleter, mainCommandNames);
+        registerCommand(new SilentControlPlayerCommand(), tabCompleter, silentControlCommandNames);
+        registerCommand(new ControlPlayerReloadCommand(), null, reloadCommandNames);
+        registerCommand(new ControlPlayerFixCommand(), null, fixCommandNames);
+    }
 
-        for (String commandName : silentControlCommandNames) {
-            PluginCommand command = getCommand(commandName);
-            command.setExecutor(silentControlCommandClass);
-            command.setTabCompleter(tabCompleterClass);
-        }
-
-        for (String commandName : reloadCommandNames) {
-            PluginCommand command = getCommand(commandName);
-            command.setExecutor(reloadCommandClass);
-        }
-
-        for (String commandName : fixCommandNames) {
-            PluginCommand command = getCommand(commandName);
-            command.setExecutor(fixCommandClass);
+    protected void registerCommand(CommandExecutor commandExecutor, TabCompleter tabCompleter, String... commands) {
+        PluginCommand pluginCommand;
+        for (String command : commands) {
+            pluginCommand = getCommand(command);
+            pluginCommand.setExecutor(commandExecutor);
+            if(tabCompleter != null) pluginCommand.setTabCompleter(tabCompleter);
         }
     }
 
