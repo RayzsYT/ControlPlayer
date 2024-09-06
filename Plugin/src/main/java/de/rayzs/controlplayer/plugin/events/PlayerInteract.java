@@ -1,6 +1,5 @@
 package de.rayzs.controlplayer.plugin.events;
 
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import de.rayzs.controlplayer.api.control.*;
 import org.bukkit.entity.Player;

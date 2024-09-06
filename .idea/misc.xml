@@ -36,6 +36,7 @@
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/AuraSkills-Addon/pom.xml" />
         <option value="$PROJECT_DIR$/Test/pom.xml" />
       </set>
     </option>

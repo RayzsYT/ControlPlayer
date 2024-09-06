@@ -8,12 +8,9 @@ import de.rayzs.controlplayer.api.files.settings.SettingType;
 import de.rayzs.controlplayer.api.files.settings.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class SilentControlPlayerCommand extends Command {

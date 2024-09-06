@@ -8,6 +8,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,6 +26,7 @@ public class ControlManager {
     private static final HashMap<Player, Location> LAST_LOCATION = new HashMap<>();
     private static final HashMap<Player, GameMode> LAST_GAMEMODE = new HashMap<>();
     private static final HashMap<Player, List<Player>> PLAYER_WHO_CAN_SEE = new HashMap<>();
+    private static final HashMap<Player, List<PotionEffect>> LAST_EFFECTS = new HashMap<>();
     private static final HashMap<String, Long> QUEUE_MESSAGES = new HashMap<>();
 
     private static final List<ControlInstance> INSTANCES = new ArrayList<>();

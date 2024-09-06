@@ -1,15 +1,11 @@
 package de.rayzs.controlplayer.plugin.commands;
 
-import de.rayzs.controlplayer.api.control.ControlManager;
 import de.rayzs.controlplayer.api.files.messages.*;
 import de.rayzs.controlplayer.api.files.settings.SettingsManager;
 import de.rayzs.controlplayer.plugin.ControlPlayerPlugin;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class ControlPlayerReloadCommand extends Command {

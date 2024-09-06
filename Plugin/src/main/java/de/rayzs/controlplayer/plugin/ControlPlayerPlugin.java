@@ -1,8 +1,12 @@
 package de.rayzs.controlplayer.plugin;
 
+import de.rayzs.controlplayer.plugin.bstats.Metrics;
+import de.rayzs.controlplayer.plugin.commands.ControlPlayerReloadCommand;
 import de.rayzs.controlplayer.api.control.ControlManager;
 import de.rayzs.controlplayer.api.files.settings.*;
-import de.rayzs.controlplayer.plugin.bstats.Metrics;
+import de.rayzs.controlplayer.plugin.commands.ControlPlayerCommand;
+import de.rayzs.controlplayer.plugin.commands.ControlPlayerFixCommand;
+import de.rayzs.controlplayer.plugin.commands.SilentControlPlayerCommand;
 import de.rayzs.controlplayer.api.web.WebConnection;
 import de.rayzs.controlplayer.plugin.events.*;
 import org.bukkit.Server;
@@ -10,7 +14,6 @@ import org.bukkit.command.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.Listener;
 import org.bukkit.Bukkit;
-import de.rayzs.controlplayer.plugin.commands.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
