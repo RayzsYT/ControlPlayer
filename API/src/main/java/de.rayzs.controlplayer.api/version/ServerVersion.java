@@ -1,52 +1,77 @@
 package de.rayzs.controlplayer.api.version;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
+
+import java.util.Arrays;
 
 public class ServerVersion {
 
     public static ServerVersion INSTANCE;
 
-    private boolean legacy;
-    private String rawVersionName;
     private Version version;
-    int major, minor, release;
+    private boolean legacy;
+    private String versionName, versionPackageName, rawVersionName;
+    private int major, minor, release;
 
     public ServerVersion(Server server) {
-        rawVersionName = server.getClass().getPackage().getName();
-        rawVersionName = rawVersionName.substring(rawVersionName.lastIndexOf('.') + 1);
-        version = getVersionEnum(rawVersionName);
-        legacy = minor <= 16;
         INSTANCE = this;
+        try {
+            Class.forName("org.bukkit.Server");
+            loadVersionName(server);
+            loadAges();
+            loadVersionEnum();
+            legacy = minor <= 16;
+        } catch (Throwable ignored) {
+            System.err.println("Could not read server version!");
+        }
+
     }
 
-    public String getRawVersionName() { return rawVersionName; }
-    public boolean isModern() { return !legacy; }
-    public boolean isLegacy() { return legacy; }
-    public boolean isPrimaryVersion(int primaryVersion) { return getAges(version)[1] == primaryVersion; }
+    public boolean isModern() {
+        return !legacy;
+    }
 
-    public Version getVersionEnum(String versionName) {
-        versionName = versionName.replace("v", "");
-        String primaryVersionName, fullVersionName = null;
-        final int[] age = getAges(versionName);
-        final int major = age[0], minor = age[1], release = age[2];
-        StringBuilder builder = new StringBuilder("v_");
-        builder.append(major).append("_").append(minor);
-        primaryVersionName = builder.toString();
-        if (release != -1) {
-            if (builder.toString().contains("1_8"))
-                builder.append(release == 3 ? "_9" : "");
-            else builder.append("_").append(release);
-            fullVersionName = builder.toString();
-        }
+    public boolean isLegacy() {
+        return legacy;
+    }
 
-        Version versionResult;
+    public String getRawVersionName() {
+        return rawVersionName;
+    }
+
+    private void loadVersionName(Object serverObject) throws Exception {
+        versionName = Bukkit.getName();
+        rawVersionName = (String) serverObject.getClass().getMethod("getBukkitVersion").invoke(serverObject);
+        rawVersionName = rawVersionName.split("-")[0].replace(".", "_");
+        versionPackageName = serverObject.getClass().getPackage().getName();
+        versionPackageName = versionPackageName.substring(versionPackageName.lastIndexOf('.') + 1);
+    }
+
+    private void loadVersionEnum() {
         try {
-            versionResult = Version.valueOf(fullVersionName);
-        } catch (IllegalArgumentException ignore) {
-            try { versionResult = Version.valueOf(primaryVersionName);
-            } catch (IllegalArgumentException exception) { versionResult = Version.UNKNOWN; }
+            final String primaryVersionName, fullVersionName;
+            StringBuilder builder = new StringBuilder("v_");
+            builder.append(major).append("_").append(minor);
+            primaryVersionName = builder.toString();
+            if (release != 0) builder.append("_").append(release);
+            fullVersionName = builder.toString();
+            boolean couldFindOriginalVersion = Arrays.stream(Version.values()).anyMatch(searchingVersion -> searchingVersion.toString().equals(fullVersionName));
+            version = Version.valueOf(couldFindOriginalVersion ? fullVersionName : primaryVersionName);
+        } catch (Exception exception) {
+            version = Version.UNSUPPORTED;
         }
-        return versionResult;
+    }
+
+    private void loadAges() {
+        String[] versionArgs = rawVersionName.split("_");
+        major = Integer.parseInt(versionArgs[0]);
+        minor = Integer.parseInt(versionArgs[1]);
+        release = versionArgs.length > 2 ? Integer.parseInt(versionArgs[2]) : 0;
+    }
+
+    public int getMajor() {
+        return major;
     }
 
     public int getMinor() {
@@ -57,29 +82,8 @@ public class ServerVersion {
         return release;
     }
 
-    public int[] getAges(String versionName) {
-        String[] versionArgs = versionName.replace("v", "").replace("R", "").split("_");
-        try {
-            major = Integer.parseInt(versionArgs[0]);
-            minor = Integer.parseInt(versionArgs[1]);
-            release = versionArgs.length > 2 ? Integer.parseInt(versionArgs[2].replace("R", "")) : -1;
-        }catch (NumberFormatException ignored) { }
-        return new int[]{major, minor, release};
-    }
-
-    public int[] getAges(Version version) {
-        String versionName = version.toString();
-        String[] versionArgs = versionName.replace("v_", "").split("_");
-        int major = 0, minor = 0, release = 0;
-        try {
-            major = Integer.parseInt(versionArgs[0]);
-            minor = Integer.parseInt(versionArgs[1]);
-            release = versionArgs.length > 2 ? Integer.parseInt(versionArgs[2].replace("R", "")) : -1;
-        }catch (NumberFormatException ignored) { }
-        return new int[]{major, minor, release};
-    }
-
     public enum Version {
+        UNKNOWN, UNSUPPORTED,
         v_1_8, v_1_8_8,
         v_1_9, v_1_9_4,
         v_1_10, v_1_10_2,
@@ -89,56 +93,10 @@ public class ServerVersion {
         v_1_14, v_1_14_4,
         v_1_15, v_1_15_2,
         v_1_16, v_1_16_4, v_1_16_5,
-        v_1_17, v_1_17_1,
-        v_1_18, v_1_18_1, v_1_18_2,
-        v_1_19, v_1_19_1, v_1_19_2, v_1_19_3,
-        v_1_20, v_1_20_1, v_1_20_2, v_1_20_3, v_1_20_4,
+        v_1_17, v_1_17_1, v_1_18,
+        v_1_18_1, v_1_18_2,
+        v_1_19, v_1_19_1, v_1_19_2, v_1_19_3, v_1_19_4,
+        v_1_20, v_1_20_1, v_1_20_2, v_1_20_3, v_1_20_4, v_1_20_5, v_1_20_6,
         v_1_21, v_1_21_1, v_1_21_2,
-        UNKNOWN;
-        /*
-        // minecraft server protocols
-        // https://minecraft.fandom.com/wiki/Protocol_version
-        public static int getProtocol(Version version) {
-            switch (version) {
-                case v_1_8:
-                case v_1_8_9:
-                    return 47;
-                case v_1_9:
-                    return 107;
-                case v_1_9_4:
-                    return 110;
-                case v_1_10:
-                case v_1_10_2:
-                    return 210;
-                case v_1_11:
-                    return 315;
-                case v_1_11_2:
-                    return 316;
-                case v_1_12:
-                    return 335;
-                case v_1_12_2:
-                    return 340;
-                case v_1_13:
-                    return 393;
-                case v_1_13_2:
-                    return 404;
-                case v_1_14:
-                    return 477;
-                case v_1_14_4:
-                    return 498;
-                case v_1_15:
-                    return 573;
-                case v_1_15_2:
-                    return 578;
-                case v_1_16:
-                    return 735;
-                case v_1_16_4:
-                case v_1_16_5:
-                    return 754;
-                default: case MODERN:
-                    return 755;
-            }
-        }
-        */
     }
 }
