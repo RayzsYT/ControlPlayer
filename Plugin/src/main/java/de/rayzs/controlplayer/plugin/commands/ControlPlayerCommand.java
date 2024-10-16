@@ -57,9 +57,11 @@ public class ControlPlayerCommand extends Command {
                         return true;
                     }
 
-                    if (!((boolean) SettingsManager.getSetting(SettingType.SYSTEM_IGNOREBYPASS) || !(victim.isOp() || victim.hasPermission("controlplayer.bypass") || HierarchyManager.isHigher(player, victim)))) {
-                        sender.sendMessage(MessageManager.getMessage(MessageType.PLAYER_IMUN));
-                        return true;
+                    if(!(boolean) SettingsManager.getSetting(SettingType.SYSTEM_IGNOREBYPASS)) {
+                        if(victim.isOp() || HierarchyManager.isHigher(player, victim)) {
+                            sender.sendMessage(MessageManager.getMessage(MessageType.PLAYER_IMUN));
+                            return true;
+                        }
                     }
 
                     if (victim.isDead()) {
