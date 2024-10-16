@@ -4,6 +4,7 @@ import de.rayzs.controlplayer.api.control.*;
 import de.rayzs.controlplayer.api.files.messages.*;
 import de.rayzs.controlplayer.api.files.settings.SettingType;
 import de.rayzs.controlplayer.api.files.settings.SettingsManager;
+import de.rayzs.controlplayer.api.hierarchy.HierarchyManager;
 import org.bukkit.command.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -40,24 +41,41 @@ public class ControlPlayerCommand extends Command {
                 sender.sendMessage(MessageManager.getMessage(MessageType.BEING_CONTROLLED));
                 return true;
             case -1:
-                if(args.length == 1) {
+                if (args.length == 1) {
                     sendHelp = false;
                     Player victim = Bukkit.getPlayer(args[0]);
-                    if (victim != null) {
-                        int victimInstance = ControlManager.getInstanceState(victim);
-                        if (victim != player) {
-                            if ((boolean) SettingsManager.getSetting(SettingType.SYSTEM_IGNOREBYPASS) || !(victim.isOp() || victim.hasPermission("controlplayer.bypass"))) {
-                                if (!victim.isDead()) {
-                                    if (victimInstance != 1) {
-                                        ControlState state = ControlManager.createControlInstance(player, victim, false);
-                                        if (state == ControlState.SUCCESS)
-                                            sender.sendMessage(MessageManager.getMessage(MessageType.NORMAL_SUCCESS).replace("%player%", victim.getName()));
-                                        else sender.sendMessage(MessageManager.getMessage(MessageType.ERROR));
-                                    } else sender.sendMessage(MessageManager.getMessage(MessageType.ALREADY_CONTROLLED));
-                                } else sender.sendMessage(MessageManager.getMessage(MessageType.NOT_ALIVE));
-                            } else sender.sendMessage(MessageManager.getMessage(MessageType.PLAYER_IMUN));
-                        } else sender.sendMessage(MessageManager.getMessage(MessageType.SELF_CONTROL));
-                    } else sender.sendMessage(MessageManager.getMessage(MessageType.NOT_ONLINE));
+
+                    if (victim == null) {
+                        sender.sendMessage(MessageManager.getMessage(MessageType.NOT_ONLINE));
+                        return true;
+                    }
+
+                    int victimInstance = ControlManager.getInstanceState(victim);
+                    if (victim == player) {
+                        sender.sendMessage(MessageManager.getMessage(MessageType.SELF_CONTROL));
+                        sender.sendMessage(MessageManager.getMessage(MessageType.SELF_CONTROL));
+                        return true;
+                    }
+
+                    if (!((boolean) SettingsManager.getSetting(SettingType.SYSTEM_IGNOREBYPASS) || !(victim.isOp() || victim.hasPermission("controlplayer.bypass") || HierarchyManager.isHigher(player, victim)))) {
+                        sender.sendMessage(MessageManager.getMessage(MessageType.PLAYER_IMUN));
+                        return true;
+                    }
+
+                    if (victim.isDead()) {
+                        sender.sendMessage(MessageManager.getMessage(MessageType.NOT_ALIVE));
+                        return true;
+                    }
+
+                    if (victimInstance == 1) {
+                        sender.sendMessage(MessageManager.getMessage(MessageType.ALREADY_CONTROLLED));
+                        return true;
+                    }
+
+                    ControlState state = ControlManager.createControlInstance(player, victim, false);
+                    if (state == ControlState.SUCCESS)
+                        sender.sendMessage(MessageManager.getMessage(MessageType.NORMAL_SUCCESS).replace("%player%", victim.getName()));
+
                     break;
                 }
         }
