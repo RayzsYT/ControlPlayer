@@ -271,8 +271,15 @@ public class ControlManager {
                 player.setTotalExperience(LAST_TOTALEXCPERIENCE.get(player));
             }
             if (returnHealth) {
+
+                System.out.println(player.getHealthScale() + " 1-> " + LAST_HEALTHSCALE.get(player));
+                System.out.println(player.getHealth() + " 1-> " + LAST_HEALTH.get(player));
+
                 player.setHealthScale(LAST_HEALTHSCALE.get(player));
                 player.setHealth(LAST_HEALTH.get(player));
+
+                System.out.println(player.getHealthScale() + " 2-> " + LAST_HEALTHSCALE.get(player));
+                System.out.println(player.getHealth() + " 2-> " + LAST_HEALTH.get(player));
             }
             if (returnLocation) player.teleport(LAST_LOCATION.get(player));
             if (returnFoodLevel) player.setFoodLevel(LAST_FOODLEVEL.get(player));

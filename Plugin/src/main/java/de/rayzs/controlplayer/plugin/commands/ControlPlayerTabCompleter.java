@@ -20,7 +20,7 @@ public class ControlPlayerTabCompleter {
                 if(player.getName().equals(sender.getName())) return false;
 
                 if(!(boolean) SettingsManager.getSetting(SettingType.SYSTEM_IGNOREBYPASS)) {
-                    return !player.isOp() && !HierarchyManager.isHigher(player, executor);
+                    return !player.isOp() && HierarchyManager.isHigher(executor, player);
                 }
 
                 return true;

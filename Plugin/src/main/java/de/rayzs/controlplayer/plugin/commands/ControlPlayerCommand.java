@@ -53,12 +53,11 @@ public class ControlPlayerCommand extends Command {
                     int victimInstance = ControlManager.getInstanceState(victim);
                     if (victim == player) {
                         sender.sendMessage(MessageManager.getMessage(MessageType.SELF_CONTROL));
-                        sender.sendMessage(MessageManager.getMessage(MessageType.SELF_CONTROL));
                         return true;
                     }
 
                     if(!(boolean) SettingsManager.getSetting(SettingType.SYSTEM_IGNOREBYPASS)) {
-                        if(victim.isOp() || HierarchyManager.isHigher(player, victim)) {
+                        if(victim.isOp() || !HierarchyManager.isHigher(player, victim)) {
                             sender.sendMessage(MessageManager.getMessage(MessageType.PLAYER_IMUN));
                             return true;
                         }

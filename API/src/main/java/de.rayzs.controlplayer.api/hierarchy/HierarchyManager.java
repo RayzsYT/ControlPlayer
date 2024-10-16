@@ -35,10 +35,13 @@ public class HierarchyManager {
         });
 
         if(targetList.isEmpty()) return true;
+        if(executorList.isEmpty())
+            return executor.isOp() || executor.hasPermission("controlplayer.use");
+
         Collections.sort(executorList);
         Collections.sort(targetList);
 
         int executorPosition = executorList.get(0), targetPosition = targetList.get(0);
-        return executorPosition > targetPosition;
+        return executorPosition < targetPosition;
     }
 }
