@@ -19,6 +19,17 @@ public class PlayerInteract implements Listener {
 
         if (instanceState == 0 && event.getAction().toString().contains("LEFT")) swap.checkAndSwap(player);
         if(event.getClickedBlock() == null) return;
+        final String typeName = event.getClickedBlock().getType().name();
+        if(typeName.contains("ENDER") && typeName.contains("CHEST")) {
+            if(instanceState == 0 && !useSwap) {
+                event.setCancelled(true);
+                Player victim = instance.victim();
+                player.openInventory(victim.getEnderChest());
+                victim.openInventory(victim.getEnderChest());
+                return;
+            }
+        }
+
         if (useSwap && instanceState == 0 || !useSwap && instanceState == 1) event.setCancelled(true);
     }
 }
