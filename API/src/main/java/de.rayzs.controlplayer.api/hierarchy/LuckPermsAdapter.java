@@ -23,7 +23,7 @@ public class LuckPermsAdapter {
         if(user == null) return result;
 
         CachedDataManager data = user.getCachedData();
-        result = data.getPermissionData().getPermissionMap().keySet().stream().filter(perms -> perms.startsWith("controlplayer.hierarchy.")).collect(Collectors.toList());
+        result = data.getPermissionData().getPermissionMap().keySet().stream().filter(perms -> perms.startsWith("controlplayer.bypass.")).collect(Collectors.toList());
         return result;
     }
 }

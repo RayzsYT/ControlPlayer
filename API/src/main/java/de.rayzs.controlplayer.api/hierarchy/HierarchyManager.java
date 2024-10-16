@@ -19,7 +19,7 @@ public class HierarchyManager {
         List<Integer> executorList = new ArrayList<>(), targetList = new ArrayList<>();
         luckPermsAdapter.getHierarchyPerms(executor).forEach(perms -> {
             try {
-                executorList.add(Integer.parseInt(perms.replaceFirst("controlplayer.hierarchy.", "")));
+                executorList.add(Integer.parseInt(perms.replaceFirst("controlplayer.bypass.", "")));
             } catch (Throwable throwable) {
                 System.err.println("ControlPlayer could not understand permission of " + executor.getName() + "! (" + perms + ")");
             }
@@ -27,7 +27,7 @@ public class HierarchyManager {
 
         luckPermsAdapter.getHierarchyPerms(target).forEach(perms -> {
             try {
-                targetList.add(Integer.parseInt(perms.replaceFirst("controlplayer.hierarchy.", "")));
+                targetList.add(Integer.parseInt(perms.replaceFirst("controlplayer.bypass.", "")));
             } catch (Throwable throwable) {
                 System.err.println("ControlPlayer could not understand permission of " + target.getName() + "! (" + perms + ")");
             }
