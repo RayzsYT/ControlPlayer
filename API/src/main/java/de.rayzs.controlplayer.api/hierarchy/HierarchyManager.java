@@ -14,6 +14,7 @@ public class HierarchyManager {
     }
 
     public static boolean isHigher(Player executor, Player target) {
+        if(target.hasPermission("controlplayer.bypass") || target.hasPermission("*")) return false;
         if(!initialized || luckPermsAdapter == null) return true;
 
         List<Integer> executorList = new ArrayList<>(), targetList = new ArrayList<>();
