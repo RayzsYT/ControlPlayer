@@ -31,7 +31,7 @@ public class ControlManager {
 
     private static final List<ControlInstance> INSTANCES = new ArrayList<>();
     private static boolean cancelCollision = true, apiMode, sendActionbar,
-            syncFoodLevel, syncEffects,
+            syncFoodLevel, //syncEffects,
             returnInventory, returnLocation, returnHealth, returnFoodLevel, returnGamemode, returnFlight,returnLevel;
 
     private static Actionbar actionbar = new Actionbar();
@@ -45,7 +45,7 @@ public class ControlManager {
         sendActionbar = (boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_ACTIONBAR_ENABLED);
 
         syncFoodLevel = (boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_SYNC_FOODLEVEL);
-        syncEffects = (boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_SYNC_EFFECT);
+        //syncEffects = (boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_SYNC_EFFECT);
 
         returnInventory = (boolean) SettingsManager.getSetting(SettingType.CONTROL_STOP_RETURN_INVENTORY);
         returnLocation = (boolean) SettingsManager.getSetting(SettingType.CONTROL_STOP_RETURN_LOCATION);
