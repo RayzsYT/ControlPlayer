@@ -44,6 +44,9 @@ public class ControlPlayerFixCommand extends Command {
             return true;
         }
 
+        target.setHealthScale(100);
+        target.setHealth(20);
+
         ControlManager.fixPlayer(target);
         sender.sendMessage(MessageManager.getMessage(MessageType.PREFIX) + " §aFixed " + (targetName.equals("-2") ? "yourself" : target.getName()) + "!");
 

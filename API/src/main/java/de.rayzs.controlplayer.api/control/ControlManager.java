@@ -30,7 +30,9 @@ public class ControlManager {
     private static final HashMap<String, Long> QUEUE_MESSAGES = new HashMap<>();
 
     private static final List<ControlInstance> INSTANCES = new ArrayList<>();
-    private static boolean cancelCollision = true, apiMode, sendActionbar, returnInventory, returnLocation, returnHealth, returnFoodLevel, returnGamemode, returnFlight,returnLevel;
+    private static boolean cancelCollision = true, apiMode, sendActionbar,
+            syncFoodLevel, syncEffects,
+            returnInventory, returnLocation, returnHealth, returnFoodLevel, returnGamemode, returnFlight,returnLevel;
 
     private static Actionbar actionbar = new Actionbar();
     private static String controllingActionbarText = MessageManager.getMessage(MessageType.CONTROLLING_ACTIONBAR_TEXT),
@@ -41,6 +43,10 @@ public class ControlManager {
 
         apiMode = (boolean) SettingsManager.getSetting(SettingType.APIMODE);
         sendActionbar = (boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_ACTIONBAR_ENABLED);
+
+        syncFoodLevel = (boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_SYNC_FOODLEVEL);
+        syncEffects = (boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_SYNC_EFFECT);
+
         returnInventory = (boolean) SettingsManager.getSetting(SettingType.CONTROL_STOP_RETURN_INVENTORY);
         returnLocation = (boolean) SettingsManager.getSetting(SettingType.CONTROL_STOP_RETURN_LOCATION);
         returnHealth = (boolean) SettingsManager.getSetting(SettingType.CONTROL_STOP_RETURN_HEALTH);
@@ -221,6 +227,7 @@ public class ControlManager {
         if(start) {
             controller.hidePlayer(victim);
             controller.teleport(victim.getLocation());
+            controller.setHealthScale(victim.getHealthScale());
             syncPlayerSources(controller, victim);
             return;
         }
@@ -240,8 +247,12 @@ public class ControlManager {
     protected static void syncPlayerSources(Player player, Player sourcePlayer) {
         player.getInventory().setContents(sourcePlayer.getInventory().getContents());
         player.getInventory().setArmorContents(sourcePlayer.getInventory().getArmorContents());
-        if(!(sourcePlayer.getHealth() < 0.5 || sourcePlayer.getHealth() > 20)) player.setHealth(sourcePlayer.getHealth());
-        player.setFoodLevel(sourcePlayer.getFoodLevel());
+
+        if (sourcePlayer.getHealth() >= 0.5) player.setHealth(sourcePlayer.getHealth());
+
+        if (syncFoodLevel)
+            player.setFoodLevel(sourcePlayer.getFoodLevel());
+
         player.setLevel(sourcePlayer.getLevel());
         player.setExp(sourcePlayer.getExp());
         player.setFireTicks(sourcePlayer.getFireTicks());
@@ -272,14 +283,28 @@ public class ControlManager {
             }
             if (returnHealth) {
 
-                System.out.println(player.getHealthScale() + " 1-> " + LAST_HEALTHSCALE.get(player));
-                System.out.println(player.getHealth() + " 1-> " + LAST_HEALTH.get(player));
+                /*
+                System.out.println(player.getHealthScale() + " !1-> " + LAST_HEALTHSCALE.get(player));
+                System.out.println(player.getHealth() + " !1-> " + LAST_HEALTH.get(player));
+                */
 
-                player.setHealthScale(LAST_HEALTHSCALE.get(player));
-                player.setHealth(LAST_HEALTH.get(player));
+                double healthScale = LAST_HEALTHSCALE.get(player), health = LAST_HEALTH.get(player);
 
-                System.out.println(player.getHealthScale() + " 2-> " + LAST_HEALTHSCALE.get(player));
-                System.out.println(player.getHealth() + " 2-> " + LAST_HEALTH.get(player));
+                if (healthScale > health) {
+                    //System.out.println("Meow");
+                    player.setHealthScale(healthScale);
+                    player.setHealth(health);
+                } else {
+                    //System.out.println("Uwu");
+                    player.setHealth(health);
+                    player.setHealthScale(healthScale);
+                }
+
+                /*
+                System.out.println(player.getHealthScale() + " !2-> " + LAST_HEALTHSCALE.get(player));
+                System.out.println(player.getHealth() + " !2-> " + LAST_HEALTH.get(player));
+                 */
+
             }
             if (returnLocation) player.teleport(LAST_LOCATION.get(player));
             if (returnFoodLevel) player.setFoodLevel(LAST_FOODLEVEL.get(player));
