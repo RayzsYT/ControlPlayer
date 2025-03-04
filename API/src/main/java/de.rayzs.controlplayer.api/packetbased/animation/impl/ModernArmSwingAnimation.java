@@ -17,8 +17,18 @@ public class ModernArmSwingAnimation implements ArmSwing {
     }
 
     @Override
-    public void execute(Player player) {
+    public void execute(Player player, String armSwingAnimationType) {
         if (disableArmSwing || player == null) return;
+
+        if(ServerVersion.INSTANCE.getMinor() >= 20) {
+            if (armSwingAnimationType.contains("of"))
+                player.swingOffHand();
+            else
+                player.swingMainHand();
+
+            return;
+        }
+
         final String sendPacketMethodeName, packetClassPath;
 
         if(ServerVersion.INSTANCE.getMinor() == 17) {
@@ -39,13 +49,12 @@ public class ModernArmSwingAnimation implements ArmSwing {
                     Object entityPlayer = players.getClass().getMethod("getHandle").invoke(players);
                     Object playerConnection = entityPlayer.getClass().getField(ServerVersion.INSTANCE.getMinor() >= 20 ? "c" : "b").get(entityPlayer);
                     playerConnection.getClass().getMethod(sendPacketMethodeName, Class.forName(packetClassPath)).invoke(playerConnection, animationPacket);
-                }catch (Exception exception) { exception.printStackTrace(); }
+                } catch (Exception exception) {
+                    System.err.println("Disabled ArmSwingAnimations because this version isn't is supported! (" + players.getName() + ")");
+                    disableArmSwing = true;
+                }
             });
-           } catch (ClassNotFoundException
-                | NoSuchMethodException
-                | IllegalAccessException
-                | InvocationTargetException
-                | InstantiationException exception) {
+           } catch (Exception exception) {
             System.err.println("Disabled ArmSwingAnimations because this version isn't is supported!");
             disableArmSwing = true;
         }

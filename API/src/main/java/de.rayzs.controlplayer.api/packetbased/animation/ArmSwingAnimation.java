@@ -16,7 +16,7 @@ public class ArmSwingAnimation {
        else armSwing = new LegacyArmSwingAnimation(serverVersion.getRawVersionName());
    }
 
-    public void execute(Player player) {
+    public void execute(Player player, String animationTypeAsString) {
         armSwing.execute(player);
     }
 }

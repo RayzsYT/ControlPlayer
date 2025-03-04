@@ -16,7 +16,7 @@ public class LegacyArmSwingAnimation implements ArmSwing {
     }
 
     @Override
-    public void execute(Player player) {
+    public void execute(Player player, String armSwingAnimationType) {
         if(disableArmSwing || player == null) return;
         try {
             Class<?> entityClass = Class.forName("net.minecraft.server." + versionName + ".Entity");
