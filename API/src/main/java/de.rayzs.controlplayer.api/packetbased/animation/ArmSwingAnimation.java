@@ -17,6 +17,6 @@ public class ArmSwingAnimation {
    }
 
     public void execute(Player player, String animationTypeAsString) {
-        armSwing.execute(player);
+        armSwing.execute(player, animationTypeAsString);
     }
 }
