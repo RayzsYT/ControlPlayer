@@ -7,13 +7,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.command.*;
 import org.bukkit.Bukkit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ControlPlayerTabCompleter {
 
-    public static List<String> getTabCompletion(CommandSender sender) {
+    public static List<String> getTabCompletion(CommandSender sender, String[] args) {
         List<String> results = new ArrayList<>();
 
-        if(!(sender instanceof Player)) return results;
+        if(!(sender instanceof Player) || args.length > 1) return results;
+
         Player executor = (Player) sender;
         boolean specific = SpecificControlManager.doesPlayerHaveSpecificControlPerms(executor);
 
@@ -30,6 +32,7 @@ public class ControlPlayerTabCompleter {
 
                 return true;
             }).forEach(player -> results.add(player.getName()));
-        return results;
+
+        return results.stream().filter(suggestion -> suggestion.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
     }
 }

@@ -103,6 +103,6 @@ public class ControlPlayerCommand extends Command {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
-        return ControlPlayerTabCompleter.getTabCompletion(sender);
+        return ControlPlayerTabCompleter.getTabCompletion(sender, args);
     }
 }
