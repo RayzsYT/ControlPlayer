@@ -49,6 +49,9 @@ public class MessageManager {
             case WAITING_ACTIONBAR_TEXT:
                 FILE.set(defaultPath, "&eLEFT CLICK 3x &7to toggle control-mode!");
                 break;
+            case CANNOT_SPECIFIC_CONTROL:
+                FILE.set(defaultPath, defaultMessage + "&cYou can only control specific chosen players!");
+                break;
             case BEING_CONTROLLED:
                 FILE.set(defaultPath, defaultMessage + "You were being controlled right now!");
                 break;

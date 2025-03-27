@@ -2,6 +2,7 @@ package de.rayzs.controlplayer.plugin.commands;
 
 import de.rayzs.controlplayer.api.hierarchy.HierarchyManager;
 import de.rayzs.controlplayer.api.files.settings.*;
+import de.rayzs.controlplayer.api.specific.SpecificControlManager;
 import org.bukkit.entity.Player;
 import org.bukkit.command.*;
 import org.bukkit.Bukkit;
@@ -14,18 +15,21 @@ public class ControlPlayerTabCompleter {
 
         if(!(sender instanceof Player)) return results;
         Player executor = (Player) sender;
+        boolean specific = SpecificControlManager.doesPlayerHaveSpecificControlPerms(executor);
 
-        if(sender.isOp() || sender.hasPermission("controlplayer.use"))
+
+        if(sender.isOp() || sender.hasPermission("controlplayer.use") || specific)
             Bukkit.getOnlinePlayers().stream().filter(player -> {
-                if(player.getName().equals(sender.getName())) return false;
+                if (player.getName().equals(sender.getName())) return false;
+                if (specific && !SpecificControlManager.canPlayerControl(executor, player))
+                    return false;
 
-                if(!(boolean) SettingsManager.getSetting(SettingType.SYSTEM_IGNOREBYPASS)) {
-                    return !player.isOp() && HierarchyManager.isHigher(executor, player);
+                if (!(boolean) SettingsManager.getSetting(SettingType.SYSTEM_IGNOREBYPASS)) {
+                    return !player.isOp() && (HierarchyManager.isHigher(executor, player) || (SpecificControlManager.canPlayerControl(executor, player)));
                 }
 
                 return true;
-            }).forEach(player
-                    -> results.add(player.getName()));
+            }).forEach(player -> results.add(player.getName()));
         return results;
     }
 }

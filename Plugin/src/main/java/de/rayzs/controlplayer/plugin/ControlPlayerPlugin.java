@@ -1,6 +1,8 @@
 package de.rayzs.controlplayer.plugin;
 
 import de.rayzs.controlplayer.api.hierarchy.HierarchyManager;
+import de.rayzs.controlplayer.api.adapter.LuckPermsAdapter;
+import de.rayzs.controlplayer.api.specific.SpecificControlManager;
 import de.rayzs.controlplayer.plugin.bstats.Metrics;
 import de.rayzs.controlplayer.plugin.commands.ControlPlayerReloadCommand;
 import de.rayzs.controlplayer.api.control.ControlManager;
@@ -51,8 +53,11 @@ public class ControlPlayerPlugin extends JavaPlugin {
         registerEvents();
         new Metrics(this, 15651);
 
-        if(Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null)
+        if(Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+            LuckPermsAdapter.initialize();
             HierarchyManager.initialize();
+            SpecificControlManager.initialize();
+        }
     }
 
     @Override

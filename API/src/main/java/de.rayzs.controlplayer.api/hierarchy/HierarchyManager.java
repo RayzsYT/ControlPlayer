@@ -1,24 +1,23 @@
 package de.rayzs.controlplayer.api.hierarchy;
 
+import de.rayzs.controlplayer.api.adapter.LuckPermsAdapter;
 import org.bukkit.entity.Player;
 import java.util.*;
 
 public class HierarchyManager {
 
-    private static LuckPermsAdapter luckPermsAdapter = null;
     private static boolean initialized = false;
 
     public static void initialize() {
-        luckPermsAdapter = new LuckPermsAdapter();
         initialized = true;
     }
 
     public static boolean isHigher(Player executor, Player target) {
         if(target.hasPermission("controlplayer.bypass") || target.hasPermission("*")) return false;
-        if(!initialized || luckPermsAdapter == null) return true;
+        if(!initialized) return true;
 
         List<Integer> executorList = new ArrayList<>(), targetList = new ArrayList<>();
-        luckPermsAdapter.getHierarchyPerms(executor).forEach(perms -> {
+        LuckPermsAdapter.getHierarchyPerms(executor).forEach(perms -> {
             try {
                 executorList.add(Integer.parseInt(perms.replaceFirst("controlplayer.bypass.", "")));
             } catch (Throwable throwable) {
@@ -26,7 +25,7 @@ public class HierarchyManager {
             }
         });
 
-        luckPermsAdapter.getHierarchyPerms(target).forEach(perms -> {
+        LuckPermsAdapter.getHierarchyPerms(target).forEach(perms -> {
             try {
                 targetList.add(Integer.parseInt(perms.replaceFirst("controlplayer.bypass.", "")));
             } catch (Throwable throwable) {

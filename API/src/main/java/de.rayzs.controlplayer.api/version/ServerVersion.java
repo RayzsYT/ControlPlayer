@@ -10,7 +10,7 @@ public class ServerVersion {
     public static ServerVersion INSTANCE;
 
     private Version version;
-    private boolean legacy;
+    private boolean legacy, folia;
     private String versionName, versionPackageName, rawVersionName;
     private int major, minor, release;
 
@@ -22,10 +22,26 @@ public class ServerVersion {
             loadAges();
             loadVersionEnum();
             legacy = minor <= 16;
+
+            try {
+                Class.forName("com.destroystokyo.paper.proxy.VelocityProxy");
+                folia = versionName.toLowerCase().contains("folia");
+            } catch (Throwable throwable) {
+                folia = false;
+            }
+
         } catch (Throwable ignored) {
             System.err.println("Could not read server version!");
         }
 
+    }
+
+    public static ServerVersion getInstance() {
+        return INSTANCE;
+    }
+
+    public boolean isFolia() {
+        return folia;
     }
 
     public boolean isModern() {

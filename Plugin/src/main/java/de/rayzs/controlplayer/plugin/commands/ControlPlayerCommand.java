@@ -5,6 +5,7 @@ import de.rayzs.controlplayer.api.files.messages.*;
 import de.rayzs.controlplayer.api.files.settings.SettingType;
 import de.rayzs.controlplayer.api.files.settings.SettingsManager;
 import de.rayzs.controlplayer.api.hierarchy.HierarchyManager;
+import de.rayzs.controlplayer.api.specific.SpecificControlManager;
 import org.bukkit.command.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,12 +26,18 @@ public class ControlPlayerCommand extends Command {
             return true;
         }
 
+        Player player = (Player) sender;
+        boolean generalPerms = true;
+
         if(!(sender.isOp() || sender.hasPermission("controlplayer.use"))) {
-            sender.sendMessage(MessageManager.getMessage(MessageType.NO_PERMISSION));
-            return true;
+            generalPerms = false;
+
+            if (!SpecificControlManager.doesPlayerHaveSpecificControlPerms(player)) {
+                sender.sendMessage(MessageManager.getMessage(MessageType.NO_PERMISSION));
+                return true;
+            }
         }
 
-        Player player = (Player) sender;
         int playerInstance = ControlManager.getInstanceState(player);
 
         switch (playerInstance) {
@@ -54,6 +61,15 @@ public class ControlPlayerCommand extends Command {
                     if (victim == player) {
                         sender.sendMessage(MessageManager.getMessage(MessageType.SELF_CONTROL));
                         return true;
+                    }
+
+                    if (!generalPerms) {
+
+                        if (!SpecificControlManager.canPlayerControl(player, victim)) {
+                            sender.sendMessage(MessageManager.getMessage(MessageType.CANNOT_SPECIFIC_CONTROL));
+                            return true;
+                        }
+
                     }
 
                     if(!(boolean) SettingsManager.getSetting(SettingType.SYSTEM_IGNOREBYPASS)) {
