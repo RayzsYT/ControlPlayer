@@ -75,6 +75,8 @@ public class ControlPlayerPlugin extends JavaPlugin {
 
     public static void registerCommands() {
         registerCommand(new ControlPlayerCommand("controlplayer", "Take full control over a player", "/controlplayer <player>", (ArrayList<String>) SettingsManager.getSetting(SettingType.COMMANDALIASES_CONTROL)));
+        registerCommand(new ControlPlayerStopCommand("controlplayerstop", "Force someone to stop controlling", "/controlplayerstop <controller>", Arrays.asList("cps", "cpstop")));
+        registerCommand(new ControlPlayerOtherCommand("controlplayerother", "Force someone to control another player", "/controlplayerother <controller> <victim>", Arrays.asList("cpo", "cpother")));
         registerCommand(new SilentControlPlayerCommand("silentcontrolplayer", "Activate the toggle-mode to control a player", "/silentcontrolmode <player>", (ArrayList<String>) SettingsManager.getSetting(SettingType.COMMANDALIASES_SILENTCONTROL)));
         registerCommand(new ControlPlayerReloadCommand("controlplayerreload", "Reload all files", "/controlplayerreload", (ArrayList<String>) SettingsManager.getSetting(SettingType.COMMANDALIASES_RELOAD)));
         registerCommand(new ControlPlayerFixCommand("controlplayerfix", "Fix players or yourself", "/controlplayerfix <optional: player>", (ArrayList<String>) SettingsManager.getSetting(SettingType.COMMANDALIASES_FIX)));
