@@ -79,10 +79,6 @@ public class InventoryInteraction implements Listener {
         Player victim = instance.victim();
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(ControlPlayerPlugin.getInstance(), () -> {
-
-            System.out.println(1);
-            System.out.println(victim.getOpenInventory().getType().name());
-
             if(player != victim) {
                 if (!victim.getOpenInventory().getType().name().contains("CRAFTING"))
                     victim.closeInventory();
