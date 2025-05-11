@@ -3,6 +3,7 @@ package de.rayzs.controlplayer.plugin;
 import de.rayzs.controlplayer.api.hierarchy.HierarchyManager;
 import de.rayzs.controlplayer.api.adapter.LuckPermsAdapter;
 import de.rayzs.controlplayer.api.specific.SpecificControlManager;
+import de.rayzs.controlplayer.api.version.ServerVersion;
 import de.rayzs.controlplayer.plugin.bstats.Metrics;
 import de.rayzs.controlplayer.plugin.commands.ControlPlayerReloadCommand;
 import de.rayzs.controlplayer.api.control.ControlManager;
@@ -97,6 +98,10 @@ public class ControlPlayerPlugin extends JavaPlugin {
                 getLogger().warning("Error message:");
                 exception.printStackTrace();
             }
+        }
+
+        if (ServerVersion.getInstance().getMinor() >= 18) {
+            getServer().getPluginManager().registerEvents(new PlayerAchievement(), this);
         }
     }
 
