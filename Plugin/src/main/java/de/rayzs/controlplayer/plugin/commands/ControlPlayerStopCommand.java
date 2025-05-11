@@ -1,7 +1,6 @@
 package de.rayzs.controlplayer.plugin.commands;
 
 import de.rayzs.controlplayer.api.control.ControlManager;
-import de.rayzs.controlplayer.api.control.ControlState;
 import de.rayzs.controlplayer.api.files.messages.MessageManager;
 import de.rayzs.controlplayer.api.files.messages.MessageType;
 import org.bukkit.Bukkit;
@@ -27,7 +26,11 @@ public class ControlPlayerStopCommand extends Command {
 
         if (args.length < 1) {
             // SEND: Usage
-            sender.sendMessage("/cps <controller>");
+
+            sender.sendMessage(
+                MessageManager.getMessage(MessageType.STOP_USAGE)
+            );
+        
             return true;
         }
 
@@ -35,7 +38,12 @@ public class ControlPlayerStopCommand extends Command {
 
         if (controller == null) {
             // SEND: Controller not online
-            sender.sendMessage("User offline.");
+
+            sender.sendMessage(
+                MessageManager.getMessage(MessageType.STOP_OFFLINE)
+                .replace("%player%", args[0])
+            );
+
             return true;
         }
 
@@ -43,13 +51,21 @@ public class ControlPlayerStopCommand extends Command {
 
         if (instanceId == 0) {
             if (ControlManager.deleteControlInstance(controller)) {
-                sender.sendMessage("Stopped control instance for controller(" + controller.getName() + ").");
-            }
+
+            sender.sendMessage(
+                MessageManager.getMessage(MessageType.STOP_SUCCESS)
+                .replace("%player%", controller.getName())
+            );
+
+        }
 
             return true;
         }
 
-        sender.sendMessage("User is not controlling anyone.");
+        sender.sendMessage(
+            MessageManager.getMessage(MessageType.STOP_NO_SESSION)
+            .replace("%player%", controller.getName())
+        );
         return true;
     }
 

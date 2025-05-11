@@ -1,14 +1,15 @@
 package de.rayzs.controlplayer.plugin.commands;
 
-import de.rayzs.controlplayer.api.control.ControlManager;
-import de.rayzs.controlplayer.api.files.messages.MessageManager;
-import de.rayzs.controlplayer.api.files.messages.MessageType;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
+import de.rayzs.controlplayer.api.control.ControlManager;
+import de.rayzs.controlplayer.api.files.messages.MessageManager;
+import de.rayzs.controlplayer.api.files.messages.MessageType;
 
 public class ControlPlayerFixCommand extends Command {
 

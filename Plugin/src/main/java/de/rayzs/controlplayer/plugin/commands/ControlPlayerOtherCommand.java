@@ -1,21 +1,17 @@
 package de.rayzs.controlplayer.plugin.commands;
 
-import de.rayzs.controlplayer.api.control.ControlManager;
-import de.rayzs.controlplayer.api.control.ControlState;
-import de.rayzs.controlplayer.api.files.messages.MessageManager;
-import de.rayzs.controlplayer.api.files.messages.MessageType;
-import de.rayzs.controlplayer.api.files.settings.SettingType;
-import de.rayzs.controlplayer.api.files.settings.SettingsManager;
-import de.rayzs.controlplayer.api.hierarchy.HierarchyManager;
-import de.rayzs.controlplayer.api.specific.SpecificControlManager;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import de.rayzs.controlplayer.api.control.ControlManager;
+import de.rayzs.controlplayer.api.control.ControlState;
+import de.rayzs.controlplayer.api.files.messages.MessageManager;
+import de.rayzs.controlplayer.api.files.messages.MessageType;
 
 public class ControlPlayerOtherCommand extends Command {
 
@@ -32,7 +28,11 @@ public class ControlPlayerOtherCommand extends Command {
 
         if (args.length < 2) {
             // SEND: Usage
-            sender.sendMessage("/cpo <controller> <victim>");
+            
+            sender.sendMessage(
+                MessageManager.getMessage(MessageType.OTHER_USAGE)
+            );
+
             return true;
         }
 
@@ -40,7 +40,12 @@ public class ControlPlayerOtherCommand extends Command {
 
         if (controller == null) {
             // SEND: Controller not online
-            sender.sendMessage("Controller offline.");
+            
+            sender.sendMessage(
+                MessageManager.getMessage(MessageType.OTHER_OFFLINE)
+                .replace("%player%", args[0])
+            );
+
             return true;
         }
 
@@ -49,7 +54,12 @@ public class ControlPlayerOtherCommand extends Command {
         if (instanceId == 0) {
 
             if (ControlManager.deleteControlInstance(controller)) {
-                sender.sendMessage("Stopped control instance for controller(" + controller.getName() + ").");
+                
+                sender.sendMessage(
+                    MessageManager.getMessage(MessageType.OTHER_STOPPED)
+                    .replace("%player%", controller.getName())
+            );
+
             }
 
             return true;
@@ -57,25 +67,45 @@ public class ControlPlayerOtherCommand extends Command {
 
         if (victim == null) {
             // SEND: Victim not online
-            sender.sendMessage("Victim offline.");
+
+            sender.sendMessage(
+                MessageManager.getMessage(MessageType.OTHER_OFFLINE)
+                .replace("%player%", args[1])
+            );
+
             return true;
         }
 
         if (controller == victim) {
             // SEND: Cannot control controller
-            sender.sendMessage("Controller cannot be victim.");
+
+            sender.sendMessage(
+                MessageManager.getMessage(MessageType.OTHER_SAME)
+                .replace("%player%", args[0])
+            );
+
             return true;
         }
 
         if (controller.isDead()) {
             // SEND: Controller not alive
-            sender.sendMessage("Controller dead.");
+
+            sender.sendMessage(
+                MessageManager.getMessage(MessageType.OTHER_DEAD)
+                .replace("%player%", controller.getName())
+            );
+
             return true;
         }
 
         if (victim.isDead()) {
             // SEND: Victim not alive
-            sender.sendMessage("Victim dead.");
+
+            sender.sendMessage(
+                MessageManager.getMessage(MessageType.OTHER_DEAD)
+                .replace("%player%", victim.getName())
+            );
+
             return true;
         }
 
@@ -84,13 +114,23 @@ public class ControlPlayerOtherCommand extends Command {
 
         if (instanceId == 1) {
             // SEND: Controller already being controlled
-            sender.sendMessage("Controller already being controlled");
+
+            sender.sendMessage(
+                MessageManager.getMessage(MessageType.OTHER_ALREADY_CONTROLLED)
+                .replace("%player%", controller.getName())
+            );
+
             return true;
         }
 
         if (victimInstanceId == 1) {
             // SEND: Victim already being controlled
-            sender.sendMessage("Victim already being controlled");
+ 
+            sender.sendMessage(
+                MessageManager.getMessage(MessageType.OTHER_ALREADY_CONTROLLED)
+                .replace("%player%", victim.getName())
+            );
+
             return true;
         }
 
@@ -98,7 +138,12 @@ public class ControlPlayerOtherCommand extends Command {
         if (state != ControlState.SUCCESS)
             return true;
 
-        sender.sendMessage("Done! Controller(" + controller.getName() + ") is now controlling victim(" + victim.getName() + ").");
+            sender.sendMessage(
+                MessageManager.getMessage(MessageType.OTHER_SUCCESS)
+                .replace("%player%", controller.getName())
+                .replace("%victim%", victim.getName())
+            );
+
         return true;
     }
 

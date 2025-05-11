@@ -1,24 +1,54 @@
 package de.rayzs.controlplayer.plugin;
 
-import de.rayzs.controlplayer.api.hierarchy.HierarchyManager;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import de.rayzs.controlplayer.api.adapter.LuckPermsAdapter;
+import de.rayzs.controlplayer.api.control.ControlManager;
+import de.rayzs.controlplayer.api.files.settings.SettingType;
+import de.rayzs.controlplayer.api.files.settings.SettingsManager;
+import de.rayzs.controlplayer.api.hierarchy.HierarchyManager;
 import de.rayzs.controlplayer.api.specific.SpecificControlManager;
 import de.rayzs.controlplayer.api.version.ServerVersion;
-import de.rayzs.controlplayer.plugin.bstats.Metrics;
-import de.rayzs.controlplayer.plugin.commands.ControlPlayerReloadCommand;
-import de.rayzs.controlplayer.api.control.ControlManager;
-import de.rayzs.controlplayer.api.files.settings.*;
-import de.rayzs.controlplayer.plugin.commands.*;
 import de.rayzs.controlplayer.api.web.WebConnection;
-import de.rayzs.controlplayer.plugin.events.*;
-import org.bukkit.Server;
-import org.bukkit.command.*;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.event.Listener;
-import org.bukkit.Bukkit;
-
-import java.lang.reflect.Field;
-import java.util.*;
+import de.rayzs.controlplayer.plugin.bstats.Metrics;
+import de.rayzs.controlplayer.plugin.commands.ControlPlayerCommand;
+import de.rayzs.controlplayer.plugin.commands.ControlPlayerFixCommand;
+import de.rayzs.controlplayer.plugin.commands.ControlPlayerOtherCommand;
+import de.rayzs.controlplayer.plugin.commands.ControlPlayerReloadCommand;
+import de.rayzs.controlplayer.plugin.commands.ControlPlayerStopCommand;
+import de.rayzs.controlplayer.plugin.commands.SilentControlPlayerCommand;
+import de.rayzs.controlplayer.plugin.events.BlockBreak;
+import de.rayzs.controlplayer.plugin.events.BlockPlace;
+import de.rayzs.controlplayer.plugin.events.EntityDamage;
+import de.rayzs.controlplayer.plugin.events.EntityDamageByEntity;
+import de.rayzs.controlplayer.plugin.events.EntityTargetLivingEntity;
+import de.rayzs.controlplayer.plugin.events.InventoryInteraction;
+import de.rayzs.controlplayer.plugin.events.PlayerAchievement;
+import de.rayzs.controlplayer.plugin.events.PlayerAnimation;
+import de.rayzs.controlplayer.plugin.events.PlayerChangeWorld;
+import de.rayzs.controlplayer.plugin.events.PlayerChat;
+import de.rayzs.controlplayer.plugin.events.PlayerCommandPreProcess;
+import de.rayzs.controlplayer.plugin.events.PlayerDeath;
+import de.rayzs.controlplayer.plugin.events.PlayerDropItem;
+import de.rayzs.controlplayer.plugin.events.PlayerInteract;
+import de.rayzs.controlplayer.plugin.events.PlayerInteractAtEntity;
+import de.rayzs.controlplayer.plugin.events.PlayerJoin;
+import de.rayzs.controlplayer.plugin.events.PlayerPickupItem;
+import de.rayzs.controlplayer.plugin.events.PlayerQuit;
+import de.rayzs.controlplayer.plugin.events.PlayerTeleport;
+import de.rayzs.controlplayer.plugin.events.PlayerToggleFlight;
+import de.rayzs.controlplayer.plugin.events.PlayerToggleSneak;
+import de.rayzs.controlplayer.plugin.events.PlayerToggleSprint;
 
 public class ControlPlayerPlugin extends JavaPlugin {
 

@@ -1,15 +1,22 @@
 package de.rayzs.controlplayer.plugin.events;
 
-import de.rayzs.controlplayer.api.packetbased.animation.ArmSwingAnimation;
-import de.rayzs.controlplayer.api.utils.ExpireList;
-import org.bukkit.entity.*;
+import java.util.concurrent.TimeUnit;
+
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Sittable;
+import org.bukkit.entity.Tameable;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import de.rayzs.controlplayer.api.control.*;
-import org.bukkit.event.*;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
-import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
+import de.rayzs.controlplayer.api.control.ControlInstance;
+import de.rayzs.controlplayer.api.control.ControlManager;
+import de.rayzs.controlplayer.api.control.ControlSwap;
+import de.rayzs.controlplayer.api.packetbased.animation.ArmSwingAnimation;
+import de.rayzs.controlplayer.api.utils.ExpireList;
 
 public class PlayerInteractAtEntity extends ArmSwingAnimation implements Listener {
 
