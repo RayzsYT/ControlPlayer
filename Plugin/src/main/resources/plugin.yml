@@ -1,5 +1,5 @@
 name: ControlPlayer
-version: 2.6.0
+version: 2.6.1
 main: de.rayzs.controlplayer.plugin.ControlPlayerPlugin
 author: Rayzs_YT
 api-version: 1.13

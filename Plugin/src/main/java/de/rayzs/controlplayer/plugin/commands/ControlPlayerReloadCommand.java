@@ -1,5 +1,6 @@
 package de.rayzs.controlplayer.plugin.commands;
 
+import de.rayzs.controlplayer.api.control.ControlManager;
 import de.rayzs.controlplayer.api.files.messages.*;
 import de.rayzs.controlplayer.api.files.settings.SettingsManager;
 import de.rayzs.controlplayer.plugin.ControlPlayerPlugin;
@@ -25,6 +26,7 @@ public class ControlPlayerReloadCommand extends Command {
         sender.sendMessage(MessageManager.getMessage(MessageType.PREFIX) + " §6Reloading all files! Please wait...");
         MessageManager.reload(false);
         SettingsManager.reload(false);
+        ControlManager.loadSettings();
         ControlPlayerPlugin.unregisterCommands();
         ControlPlayerPlugin.registerCommands();
         sender.sendMessage(MessageManager.getMessage(MessageType.PREFIX) + " §aDone!");

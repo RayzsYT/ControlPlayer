@@ -53,11 +53,8 @@ public class InventoryInteraction implements Listener {
 
         Player victim = instance.victim();
 
-        System.out.println("Maybe trying to open inventory");
-
         if(player != victim)
             Bukkit.getScheduler().scheduleSyncDelayedTask(ControlPlayerPlugin.getInstance(), () -> {
-                System.out.println("Opening inventory for " + victim);
                 victim.openInventory(event.getInventory());
             }, 5);
     }
@@ -85,7 +82,6 @@ public class InventoryInteraction implements Listener {
             if(player != victim) {
                 if (!victim.getOpenInventory().getType().name().contains("CRAFTING")) {
                     if (player.getOpenInventory().getTopInventory() != event.getInventory()) {
-                        System.out.println("Closing for " + victim.getName() + " because: " + player.getName());
                         victim.closeInventory();
                     }
                 }
