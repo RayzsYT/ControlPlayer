@@ -56,7 +56,7 @@ public class InventoryInteraction implements Listener {
         if(player != victim)
             Bukkit.getScheduler().scheduleSyncDelayedTask(ControlPlayerPlugin.getInstance(), () -> {
                 victim.openInventory(event.getInventory());
-            });
+            }, 5);
     }
 
     @EventHandler (priority = EventPriority.LOWEST)
@@ -80,8 +80,11 @@ public class InventoryInteraction implements Listener {
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(ControlPlayerPlugin.getInstance(), () -> {
             if(player != victim) {
-                if (!victim.getOpenInventory().getType().name().contains("CRAFTING"))
-                    victim.closeInventory();
+                if (!victim.getOpenInventory().getType().name().contains("CRAFTING")) {
+                    if (player.getOpenInventory().getTopInventory() != event.getInventory()) {
+                        victim.closeInventory();
+                    }
+                }
             }
         });
     }
