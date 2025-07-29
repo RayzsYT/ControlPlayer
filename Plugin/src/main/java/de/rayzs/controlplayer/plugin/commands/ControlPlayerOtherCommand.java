@@ -138,11 +138,11 @@ public class ControlPlayerOtherCommand extends Command {
         if (state != ControlState.SUCCESS)
             return true;
 
-            sender.sendMessage(
+        sender.sendMessage(
                 MessageManager.getMessage(MessageType.OTHER_SUCCESS)
-                .replace("%player%", controller.getName())
-                .replace("%victim%", victim.getName())
-            );
+                        .replace("%player%", controller.getName())
+                        .replace("%victim%", victim.getName())
+        );
 
         return true;
     }
