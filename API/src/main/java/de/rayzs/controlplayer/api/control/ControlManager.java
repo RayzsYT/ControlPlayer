@@ -38,9 +38,7 @@ public class ControlManager {
     private static String controllingActionbarText = MessageManager.getMessage(MessageType.CONTROLLING_ACTIONBAR_TEXT),
             waitingActionbarText = MessageManager.getMessage(MessageType.WAITING_ACTIONBAR_TEXT);
 
-    public static void load(Plugin bukkitPlugin) {
-        plugin = bukkitPlugin;
-
+    public static void loadSettings() {
         apiMode = (boolean) SettingsManager.getSetting(SettingType.APIMODE);
         sendActionbar = (boolean) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_ACTIONBAR_ENABLED);
 
@@ -54,6 +52,12 @@ public class ControlManager {
         returnGamemode = (boolean) SettingsManager.getSetting(SettingType.CONTROL_STOP_RETURN_GAMEMODE);
         returnFlight = (boolean) SettingsManager.getSetting(SettingType.CONTROL_STOP_RETURN_FLIGHT);
         returnLevel = (boolean) SettingsManager.getSetting(SettingType.CONTROL_STOP_RETURN_LEVEL);
+    }
+
+    public static void load(Plugin bukkitPlugin) {
+        plugin = bukkitPlugin;
+
+        loadSettings();
 
         int delay = (int) SettingsManager.getSetting(SettingType.CONTROL_RUNNING_SYNCDELAY);
 
@@ -70,11 +74,15 @@ public class ControlManager {
                     ControlSwap swap = getControlSwap(instance);
                     if(swap != null && swap.isEnabled()) {
                         boolean swapped = swap.isSwapped();
-                        if(sendActionbar)
+                        if (sendActionbar)
                             actionbar.execute(instance.controller(), (swapped ? waitingActionbarText : controllingActionbarText).replace("%player%", instance.victim().getName()));
+
                         (swapped ? instance.controller() : instance.victim()).teleport((swapped ? instance.victim() : instance.controller()));
+
                     } else {
-                        actionbar.execute(instance.controller(), controllingActionbarText.replace("%player%", instance.victim().getName()));
+                        if (sendActionbar)
+                            actionbar.execute(instance.controller(), controllingActionbarText.replace("%player%", instance.victim().getName()));
+
                         instance.victim().teleport(instance.controller().getLocation());
                     }
                 }
