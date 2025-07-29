@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class EntityDamageByEntity implements Listener {
 
-    @EventHandler (priority = EventPriority.LOWEST)
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player player;
         int instanceState;
