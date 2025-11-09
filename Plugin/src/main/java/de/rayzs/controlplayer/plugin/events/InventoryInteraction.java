@@ -53,10 +53,11 @@ public class InventoryInteraction implements Listener {
 
         Player victim = instance.victim();
 
-        if(player != victim)
+        if(player != victim) {
             Bukkit.getScheduler().scheduleSyncDelayedTask(ControlPlayerPlugin.getInstance(), () -> {
                 victim.openInventory(event.getInventory());
-            }, 5);
+            });
+        }
     }
 
     @EventHandler (priority = EventPriority.LOWEST)
@@ -71,21 +72,31 @@ public class InventoryInteraction implements Listener {
         int instanceState = ControlManager.getInstanceState(player);
         boolean useSwap = swap.isEnabled() && swap.isSwapped();
         if (useSwap && instanceState == 0 || !useSwap && instanceState == 1) {
-            if(event.getInventory().getType().name().contains("CRAFTING") || !event.getPlayer().getOpenInventory().getType().name().contains("CRAFTING")) return;
-            Bukkit.getScheduler().scheduleSyncDelayedTask(ControlPlayerPlugin.getInstance(), () -> player.openInventory(event.getInventory()));
+            String openInventoryType = event.getInventory().getType().name();
+            if (!openInventoryType.contains("CRAFTING") && !openInventoryType.contains("CREATIVE")) {
+
+                Player controller = useSwap ? instance.victim() : instance.controller();
+                String controllerOpenInventory = controller.getOpenInventory().getType().name();
+
+                if (!controllerOpenInventory.contains("CRAFTING") && !controllerOpenInventory.contains("CREATIVE")) {
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(ControlPlayerPlugin.getInstance(), () -> {
+                        player.teleport(controller);
+                        player.openInventory(event.getInventory());
+                    });
+                }
+            }
+
             return;
         }
 
         Player victim = instance.victim();
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(ControlPlayerPlugin.getInstance(), () -> {
-            if(player != victim) {
-                if (!victim.getOpenInventory().getType().name().contains("CRAFTING")) {
-                    if (player.getOpenInventory().getTopInventory() != event.getInventory()) {
-                        victim.closeInventory();
-                    }
-                }
+        if(player != victim) {
+            String openInventoryType = event.getInventory().getType().name();
+            if (!openInventoryType.contains("CRAFTING") && !openInventoryType.contains("CREATIVE")) {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(ControlPlayerPlugin.getInstance(), victim::closeInventory);
             }
-        });
+        }
+
     }
 }

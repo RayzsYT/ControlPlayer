@@ -6,6 +6,7 @@ import de.rayzs.controlplayer.api.listener.*;
 import de.rayzs.controlplayer.api.packetbased.actionbar.Actionbar;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
@@ -77,13 +78,22 @@ public class ControlManager {
                         if (sendActionbar)
                             actionbar.execute(instance.controller(), (swapped ? waitingActionbarText : controllingActionbarText).replace("%player%", instance.victim().getName()));
 
-                        (swapped ? instance.controller() : instance.victim()).teleport((swapped ? instance.victim() : instance.controller()));
+                        Player controller = swapped ? instance.victim() : instance.controller();
+                        Player victim = swapped ? instance.controller() : instance.victim();
+
+                        String openInventoryType = controller.getOpenInventory().getType().name();
+                        if (openInventoryType.contains("CRAFTING") || openInventoryType.contains("CREATIVE")) {
+                            victim.teleport(controller.getLocation());
+                        }
 
                     } else {
                         if (sendActionbar)
                             actionbar.execute(instance.controller(), controllingActionbarText.replace("%player%", instance.victim().getName()));
 
-                        instance.victim().teleport(instance.controller().getLocation());
+                        InventoryType openInventoryType = instance.controller().getOpenInventory().getType();
+                        if (openInventoryType == InventoryType.CRAFTING || openInventoryType == InventoryType.CREATIVE) {
+                            instance.victim().teleport(instance.controller().getLocation());
+                        }
                     }
                 }
             });
