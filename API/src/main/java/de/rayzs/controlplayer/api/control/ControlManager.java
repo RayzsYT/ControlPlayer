@@ -266,7 +266,11 @@ public class ControlManager {
         player.getInventory().setContents(sourcePlayer.getInventory().getContents());
         player.getInventory().setArmorContents(sourcePlayer.getInventory().getArmorContents());
 
-        if (sourcePlayer.getHealth() >= 0.5) player.setHealth(sourcePlayer.getHealth());
+        if (sourcePlayer.getHealth() >= 0.5) {
+            try {
+                player.setHealth(sourcePlayer.getHealth());
+            } catch (Throwable exception) {}
+        }
 
         if (syncFoodLevel)
             player.setFoodLevel(sourcePlayer.getFoodLevel());
