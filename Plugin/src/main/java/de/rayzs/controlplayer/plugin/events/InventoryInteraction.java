@@ -6,6 +6,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.event.inventory.*;
+import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 
 public class InventoryInteraction implements Listener {
 
@@ -21,6 +24,20 @@ public class InventoryInteraction implements Listener {
         int instanceState = ControlManager.getInstanceState(player);
         boolean useSwap = swap.isEnabled() && swap.isSwapped();
         if (useSwap && instanceState == 0 || !useSwap && instanceState == 1) event.setCancelled(true);
+
+        InventoryView view = event.getView();
+        Inventory topInventory = view.getTopInventory();
+
+        if (topInventory != null && topInventory.getType() == InventoryType.WORKBENCH) {
+            Player controller = useSwap ? instance.victim() : instance.controller();
+            Player victim = instance.victim();
+
+            if (player == controller || player == victim) {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(ControlPlayerPlugin.getInstance(), () ->
+                        syncWorkbenchCrafting(controller, victim)
+                );
+            }
+        }
     }
 
     @EventHandler (priority = EventPriority.LOWEST)
@@ -35,6 +52,20 @@ public class InventoryInteraction implements Listener {
         int instanceState = ControlManager.getInstanceState(player);
         boolean useSwap = swap.isEnabled() && swap.isSwapped();
         if (useSwap && instanceState == 0 || !useSwap && instanceState == 1) event.setCancelled(true);
+
+        InventoryView view = event.getView();
+        Inventory topInventory = view.getTopInventory();
+
+        if (topInventory != null && topInventory.getType() == InventoryType.WORKBENCH) {
+            Player controller = useSwap ? instance.victim() : instance.controller();
+            Player victim = instance.victim();
+
+            if (player == controller || player == victim) {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(ControlPlayerPlugin.getInstance(), () ->
+                        syncWorkbenchCrafting(controller, victim)
+                );
+            }
+        }
     }
 
     @EventHandler (priority = EventPriority.LOWEST)
@@ -55,7 +86,14 @@ public class InventoryInteraction implements Listener {
 
         if(player != victim) {
             Bukkit.getScheduler().scheduleSyncDelayedTask(ControlPlayerPlugin.getInstance(), () -> {
-                victim.openInventory(event.getInventory());
+                Inventory inventory = event.getInventory();
+
+                if (inventory != null && inventory.getType() == InventoryType.WORKBENCH) {
+                    victim.openWorkbench(victim.getLocation(), true);
+                    syncWorkbenchCrafting(player, victim);
+                } else {
+                    victim.openInventory(inventory);
+                }
             });
         }
     }
@@ -98,5 +136,28 @@ public class InventoryInteraction implements Listener {
             }
         }
 
+    }
+
+    private void syncWorkbenchCrafting(Player controller, Player victim) {
+        if (controller == null || victim == null) return;
+
+        InventoryView controllerView = controller.getOpenInventory();
+        InventoryView victimView = victim.getOpenInventory();
+
+        if (controllerView == null || victimView == null) return;
+
+        Inventory controllerTop = controllerView.getTopInventory();
+        Inventory victimTop = victimView.getTopInventory();
+
+        if (!(controllerTop instanceof CraftingInventory) || !(victimTop instanceof CraftingInventory)) return;
+        if (controllerTop.getType() != InventoryType.WORKBENCH || victimTop.getType() != InventoryType.WORKBENCH) return;
+
+        CraftingInventory controllerInv = (CraftingInventory) controllerTop;
+        CraftingInventory victimInv = (CraftingInventory) victimTop;
+
+        victimInv.setMatrix(controllerInv.getMatrix());
+        victimInv.setResult(controllerInv.getResult());
+
+        victim.updateInventory();
     }
 }
