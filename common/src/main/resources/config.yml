@@ -1,0 +1,75 @@
+#  ██████   ██████   ███    ██  ████████  ██████    ██████   ██       ██████   ██        █████   ██    ██  ███████  ██████
+# ██       ██    ██  ████   ██     ██     ██   ██  ██    ██  ██       ██   ██  ██       ██   ██   ██  ██   ██       ██   ██
+# ██       ██    ██  ██ ██  ██     ██     ██████   ██    ██  ██       ██████   ██       ███████    ████    █████    ██████
+# ██       ██    ██  ██  ██ ██     ██     ██   ██  ██    ██  ██       ██       ██       ██   ██     ██     ██       ██   ██
+#  ██████   ██████   ██   ████     ██     ██   ██   ██████   ███████  ██       ███████  ██   ██     ██     ███████  ██   ██
+# config.yml
+
+
+updater:
+  enabled: true
+  delay: 18000
+
+# Enabling this allows operators to control other operators.
+control_op_players: false
+
+settings:
+  # Restrictions for the victim.
+  victim_can_drop_items: false
+  victim_can_use_chat: true
+  victim_can_use_commands: true
+
+  # When the victim gets teleported to another location, the Controller will be teleported as well.
+  # To avoid that the victim cannot be teleported.
+  sync_teleportation: true
+
+  # Any message/command the victim writes will be sent to the controller.
+  spy_on_victim_chat: true
+
+  # Whether to show the default actionbar or not while controlling someone.
+  send_actionbar: true
+
+chat:
+  # If you write in the chat while controlling someone,
+  # you are writing as the victim instead.
+  always_chat_as_victim: true
+
+  # String prefix to not write as the victim.
+  # e.g: "-b I'm controlling you"
+  bypass_prefix: '-b '
+
+# Things that are synced when someone is being controlled.
+sync:
+  inventory: true
+  level: true
+  health: true
+  food_level: true
+  gamemode: true
+  flight: true
+  effect: true
+  attributes: true
+
+# Commands and aliases for ControlPlayer to use.
+command-aliases:
+  control:
+    - controlplayer
+    - control
+    - cp
+  semicontrol:
+    - semicontrol
+    - scp
+    - sc
+  forcecontrol:
+    - forcecontrol
+    - fcp
+    - fc
+  stopcontrol:
+    - stopcontrol
+    - sc
+  fix:
+    - controlplayerfix
+    - cpfix
+    - cpf
+  reload:
+    - controlplayerreload
+    - cpr

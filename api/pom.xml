@@ -4,23 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.rayzs.controlplayer</groupId>
-    <artifactId>ControlPlayer</artifactId>
-    <version>3.0.0</version>
+    <parent>
+        <groupId>de.rayzs.controlplayer</groupId>
+        <artifactId>ControlPlayer</artifactId>
+        <version>3.0.0</version>
+    </parent>
 
-    <packaging>pom</packaging>
-
-
-    <modules>
-        <module>api</module>
-        <module>common</module>
-
-        <module>impl-folia</module>
-        <module>impl-legacy</module>
-        <module>impl-spigot</module>
-        <module>impl-paper</module>
-        <module>bukkit-events</module>
-    </modules>
+    <artifactId>api</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -28,5 +18,13 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>33.5.0-jre</version>
+        </dependency>
+    </dependencies>
 
 </project>

@@ -1,0 +1,89 @@
+#  ██████   ██████   ███    ██  ████████  ██████    ██████   ██       ██████   ██        █████   ██    ██  ███████  ██████
+# ██       ██    ██  ████   ██     ██     ██   ██  ██    ██  ██       ██   ██  ██       ██   ██   ██  ██   ██       ██   ██
+# ██       ██    ██  ██ ██  ██     ██     ██████   ██    ██  ██       ██████   ██       ███████    ████    █████    ██████
+# ██       ██    ██  ██  ██ ██     ██     ██   ██  ██    ██  ██       ██       ██       ██   ██     ██     ██       ██   ██
+#  ██████   ██████   ██   ████     ██     ██   ██   ██████   ███████  ██       ███████  ██   ██     ██     ███████  ██   ██
+# messages.yml
+
+
+# General:
+prefix: '&8[&4&lC&c&lP&8]'
+error: '%prefix% &cSomething went wrong!'
+only_players: '%prefix% &cYou are not a player!'
+
+
+# Message when a new version of ControlPlayer is available:
+update_outdated_message: |
+                  %prefix% &cYou're using an outdated version of ControlPlayer!
+                  %prefix% &cPlease update it here: &e&o&nhttps://www.rayzs.de/products/controlplayer/page
+
+update_updated_message: "%prefix% &aYou are using the latest version of ControlPlayer!"
+
+# Error message why someone cannot be controlled:
+not_alive: '%prefix% &c%player% is not alive!'
+not_online: '%prefix% &c%player% is not online!'
+self_control: '%prefix% &cYou cannot control yourself!'
+player_immune: '%prefix% &cYou are not allowed to control %player%!'
+being_controlled: '%prefix% &cYou are being controlled right now!'
+cannot_specific_control: '%prefix% &cYou can only control specific chosen players!'
+
+
+# Messages when a control session had to forcefully end:
+player_died: '%prefix% &cThe player you were controlling just died!'
+player_left: '%prefix% &cThe player you were controlling just left the server!'
+
+
+# Messages during control:
+controlling_actionbar: '&aYou are controlling %player%'
+spy_chat_notification: '%prefix% &2%player% &atried to use the chat while being controlled: &e%message%'
+
+silent_waiting_actionbar: '&7You are &e&nobserving&7... &eLEFT CLICK 3x &7to start controlling!'
+silent_controlling_actionbar: '&7You are &a&ncontrolling&7... &eLEFT CLICK 3x + SNEAK &7to start observing again!'
+
+
+# Message when controlling someone via: /cp:
+normal_usage: '%prefix% &7Use &e/%label% [player] &7to control someone. Execute this command again to stop controlling.'
+normal_success: '%prefix% &aYou are controlling %player%!'
+normal_stopped: '%prefix% &aYou stopped controlling %player%!'
+normal_already_controlling: '%prefix% &c%player% is already controlling someone!'
+normal_already_controlled: '%prefix% &c%player% is already being controlled by someone!'
+
+
+# Message when semi-controlling someone:
+# Semi-controlling someone means that you first start off observing the player you are controlling.
+# By observing I mean you are basically being controlled to see in the perspective of your victim.
+# By left-clicking 3x you start controlling the player. By crouching and left-clicking 3x are start observing your victim again.
+# This mode is very funny if you want to wait for a perfect moment, for example when your victim is standing near a cliff.
+semi_usage: '%prefix% &7Use &e/%label% [player] &7to semi-control someone. Execute this command again to stop controlling the player.'
+semi_success: '%prefix% &aYou are controlling %player%! Press &eLEFT CLICK 3x &ato start controlling the player. &eLEFT CLICK 3x + hold SNEAK &ato start observing again.'
+semi_stopped: '%prefix% &aYou stopped controlling %player%!'
+semi_already_controlling: '%prefix% &c%player% is already controlling someone!'
+semi_already_controlled: '%prefix% &c%player% is already being controlled by someone!'
+
+
+# Messages when forcing someone to control another player:
+other_usage: '%prefix% &7Use &e/%label% [controller] [victim] &7to force someone control somebody. Execute this command again to stop the control.'
+other_success: '%prefix% &aYou forced %player% to control %victim%!'
+other_stopped: '%prefix% &a%player% is no longer controlling %victim%!'
+other_same: '%prefix% &cController and victim cannot be the same!'
+other_already_controlling: '%prefix% &c%player% is already controlling someone!'
+other_already_controlled: '%prefix% &c%player% is already being controlled by someone!'
+
+
+# Messages when forcing someone to stop controlling:
+stop_usage: '%prefix% &7Use &e/%label% [controller] &7to force someone to stop controlling.'
+stop_no_session: '%prefix% &c%player% is not controlling anybody!'
+stop_success: '%prefix% &aYou forced %player% to stop controlling!'
+
+
+# Messages when using the fix command:
+fix_self_success: "%prefix% &aFixed yourself!"
+fix_self_in_session: "%prefix% &cIs currently being controlled or controlling someone."
+
+fix_other_success: "%prefix% &aFixed %player%!"
+fix_other_in_session: "%prefix% &c%player% is currently being controlled or controlling someone."
+
+
+# Messages when reloading the plugin:
+reload_processing: "&eReloading all files..."
+reload_done: "&aDone!"

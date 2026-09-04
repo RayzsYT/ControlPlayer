@@ -1,0 +1,13 @@
+name: ControlPlayer
+author: Rayzs_YT
+
+website: https://modrinth.com/plugin/controlplayer
+description: Take full control over your players.
+
+main: de.rayzs.controlplayer.plugin.ControlPlayerPluginLoader
+
+version: 3.0.0
+api-version: 1.13
+folia-supported: true
+
+softdepend: ["LuckPerms", "PlaceholderAPI"]
