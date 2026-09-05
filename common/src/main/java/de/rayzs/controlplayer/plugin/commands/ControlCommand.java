@@ -71,6 +71,11 @@ public class ControlCommand extends Command {
                 return true;
             }
 
+            if (!api.getSessionProvider().canControl(player.getUUID(), bukkitTarget.getUniqueId())) {
+                ConfigData.Message.PLAYER_IMMUNE.send(player, "%player%", bukkitTarget.getName());
+                return true;
+            }
+
             if (bukkitTarget.isDead()) {
                 ConfigData.Message.NOT_ALIVE.send(player, "%player%", bukkitTarget.getName());
                 return true;

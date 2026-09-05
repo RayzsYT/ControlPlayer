@@ -75,11 +75,6 @@ public class SemiControlCommand extends Command {
 
             if (targetSession != null) {
 
-                if (bukkitTarget.isDead()) {
-                    ConfigData.Message.NOT_ALIVE.send(player, "%player%", bukkitTarget.getName());
-                    return true;
-                }
-
                 if (targetSession.getSessionHolder().isSame(target)) {
                     ConfigData.Message.SEMI_ALREADY_CONTROLLING.send(player, "%player%", target.getName());
                 } else {
@@ -88,6 +83,18 @@ public class SemiControlCommand extends Command {
 
                 return true;
             }
+
+
+            if (!api.getSessionProvider().canControl(player.getUUID(), bukkitTarget.getUniqueId())) {
+                ConfigData.Message.PLAYER_IMMUNE.send(player, "%player%", bukkitTarget.getName());
+                return true;
+            }
+
+            if (bukkitTarget.isDead()) {
+                ConfigData.Message.NOT_ALIVE.send(player, "%player%", bukkitTarget.getName());
+                return true;
+            }
+
 
             final Session newSession = api.getSessionProvider().createAndReturnSemiSession(player, target);
 
