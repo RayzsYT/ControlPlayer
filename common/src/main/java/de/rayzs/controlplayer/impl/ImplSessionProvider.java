@@ -13,6 +13,7 @@ import de.rayzs.controlplayer.plugin.config.ConfigData;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -62,6 +63,16 @@ public class ImplSessionProvider implements SessionProvider<Player> {
         sessionTargetPlayer.getAttributesMap().forEach(sessionHolderPlayer::setAttribute);
 
         sessionHolderPlayer.teleport(sessionTargetPlayer);
+
+
+        final Entity vehicleEntity = sessionTargetPlayer.get().getVehicle();
+
+        if (vehicleEntity != null) {
+            vehicleEntity.removePassenger(sessionTargetPlayer.get());
+            vehicleEntity.addPassenger(sessionHolderPlayer.get());
+        }
+
+
         syncData(sessionHolderPlayer, sessionTargetPlayer);
 
         Bukkit.getPluginManager().callEvent(new SessionStartedEvent(session));
@@ -134,6 +145,14 @@ public class ImplSessionProvider implements SessionProvider<Player> {
         sessionsMap.remove(sessionTargetPlayer.getUUID());
 
         loadData(sessionHolderPlayer, sessionHolderPlayer.getUUID());
+
+
+        final Entity vehicleEntity = sessionHolderPlayer.get().getVehicle();
+
+        if (vehicleEntity != null) {
+            vehicleEntity.removePassenger(sessionHolderPlayer.get());
+            vehicleEntity.addPassenger(sessionTargetPlayer.get());
+        }
 
 
         final HashSet<UUID> playersWhoCannotSeeHolder = playersWhoCannotSee.get(sessionHolderPlayer.getUUID());
