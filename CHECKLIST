@@ -1,0 +1,2 @@
+- Add permission check whether the player I'm trying to control has the same permission and thus bypass permission or not. (Check for setting whether opped should be skipped or not.)
+  - Add permissions `controlplayer.control.player.<player>` / `controlplayer.control.group.<lp-group>`
